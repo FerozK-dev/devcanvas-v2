@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { prisma } from "../db/prisma";
 import { AuthenticatedRequest } from "../middlewares/authMiddleware";
+import { serializeEducation } from "../utils/serializers";
 
 // Get all educations of the current user
 export const getEducations = async (req: AuthenticatedRequest, res: Response) => {
@@ -11,7 +12,7 @@ export const getEducations = async (req: AuthenticatedRequest, res: Response) =>
       },
     });
 
-    return res.json(educations);
+    return res.json(educations.map(serializeEducation));
   } catch (error) {
     return res.status(500).json({ error: "Failed to fetch educations" });
   }
@@ -29,7 +30,7 @@ export const createEducation = async (req: AuthenticatedRequest, res: Response) 
       },
     });
 
-    return res.status(201).json(newEducation);
+    return res.status(201).json(serializeEducation(newEducation));
   } catch (error) {
     return res.status(400).json({ error: "Failed to create education" });
   }
@@ -54,7 +55,7 @@ export const updateEducation = async (req: AuthenticatedRequest, res: Response) 
       data: educationData,
     });
 
-    return res.json({ message: "Education updated successfully", education: updatedEducation });
+    return res.json({ message: "Education updated successfully", education: serializeEducation(updatedEducation) });
   } catch (error) {
     return res.status(400).json({ error: "Failed to update education" });
   }

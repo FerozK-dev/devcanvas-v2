@@ -1,4 +1,4 @@
-import { User, Education } from "./types";
+import { User, Education, Experience } from "./types";
 
 
 export const serializeUser = (user: User) => {
@@ -31,5 +31,20 @@ export const serializeEducation = (education: Education) => {
     grade: education.grade ?? undefined,
     activities: education.activities ?? undefined,
     description: education.description ?? undefined,
+  };
+};
+
+export const serializeExperience = (experience: Experience) => {
+  return {
+    id: experience.id,
+    title: experience.title,
+    company: experience.company,
+    employmentType: experience.employmentType ?? undefined,
+    location: experience.location ?? undefined,
+    startDate: experience.startDate ? experience.startDate.toISOString() : undefined,
+    endDate: experience.endDate ? experience.endDate.toISOString() : undefined,
+    industry: experience.industry ?? undefined,
+    headline: experience.headline ?? undefined,
+    description: experience.description ?? undefined,
   };
 };

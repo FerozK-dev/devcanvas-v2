@@ -14,6 +14,7 @@ export interface User {
   profilePicture?: string | null;
   resume?: string | null;
   educations?: Education[];
+  experiences?: Experience[]
 }
 
 export interface Education {
@@ -21,9 +22,22 @@ export interface Education {
   school: string;
   degree?: string | null;
   field?: string | null;
-  startYear?: number | null;
-  endYear?: number | null;
+  startYear?: Date | null;
+  endYear?: Date | null;
   grade?: string | null;
   activities?: string | null;
+  description?: string | null;
+}
+
+export interface Experience {
+  id: number;
+  title: string;
+  company: string;
+  employmentType?: string | null;
+  location?: string | null;
+  startDate?: Date | null;
+  endDate?: Date | null;
+  industry?: string | null;
+  headline?: string | null;
   description?: string | null;
 }

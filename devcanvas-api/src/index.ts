@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
 import educationRoutes from './routes/educationRoutes'
+import experienceRoutes from './routes/experienceRoutes'
 import listEndpoints from 'express-list-endpoints';
 
 dotenv.config();
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use('/api/v1/', authRoutes);
 app.use('/api/v1/', userRoutes);
 app.use('/api/v1/', educationRoutes);
+app.use('/api/v1/', experienceRoutes)
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
