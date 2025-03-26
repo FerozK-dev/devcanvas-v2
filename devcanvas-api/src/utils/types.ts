@@ -14,7 +14,8 @@ export interface User {
   profilePicture?: string | null;
   resume?: string | null;
   educations?: Education[];
-  experiences?: Experience[]
+  experiences?: Experience[];
+  projects?: Project[];
 }
 
 export interface Education {

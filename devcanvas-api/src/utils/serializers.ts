@@ -56,3 +56,21 @@ export const serializeProject = (experience: Project) => {
     description: experience.description ?? undefined
   };
 };
+
+export const serializePortfolio = (user: User) => {
+  return {
+    id: user.id,
+    email: user.email,
+    firstName: user.firstName ?? undefined,
+    lastName: user.lastName ?? undefined,
+    profilePicture: user.profilePicture ?? undefined,
+    location: user.location ?? undefined,
+    headline: user.headline ?? undefined,
+    aboutMe: user.aboutMe ?? undefined,
+    publishPortfolio: user.publishPortfolio,
+    educations: user.educations?.map(serializeEducation) ?? [],
+    experiences: user.experiences?.map(serializeExperience) ?? [],
+    projects: user.projects?.map(serializeProject) ?? [],
+  };
+};
+
