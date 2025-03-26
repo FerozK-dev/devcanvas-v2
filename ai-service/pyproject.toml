@@ -1,0 +1,12 @@
+[project]
+name = "ai-service"
+version = "0.1.0"
+description = "AI service for devcanvas"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "agno>=1.2.4",
+    "fastapi[standard]>=0.115.12",
+    "pydantic-settings>=2.8.1",
+    "uvicorn>=0.34.0",
+]
