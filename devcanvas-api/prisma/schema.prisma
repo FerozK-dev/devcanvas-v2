@@ -25,8 +25,8 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   educations  Education[]
+  experiences Experience[]
 }
-
 
 model Education {
   id           Int      @id @default(autoincrement())
@@ -42,4 +42,22 @@ model Education {
   user         User     @relation(fields: [userId], references: [id])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model Experience {
+  id              Int      @id @default(autoincrement())
+  title           String
+  employmentType  String?  // Nullable
+  company         String
+  location        String?  // Nullable
+  startDate       DateTime
+  endDate         DateTime?
+  industry        String?  // Nullable
+  headline        String?  // Nullable
+  description     String?  // Nullable
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  userId          Int?
+  portfolioId     Int?
+  user            User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
