@@ -41,3 +41,9 @@ export interface Experience {
   headline?: string | null;
   description?: string | null;
 }
+
+export interface Project {
+  id: number;
+  title: string;
+  description?: string | null;
+}

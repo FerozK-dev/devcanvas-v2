@@ -1,4 +1,4 @@
-import { User, Education, Experience } from "./types";
+import { User, Education, Experience, Project } from "./types";
 
 
 export const serializeUser = (user: User) => {
@@ -46,5 +46,13 @@ export const serializeExperience = (experience: Experience) => {
     industry: experience.industry ?? undefined,
     headline: experience.headline ?? undefined,
     description: experience.description ?? undefined,
+  };
+};
+
+export const serializeProject = (experience: Project) => {
+  return {
+    id: experience.id,
+    title: experience.title,
+    description: experience.description ?? undefined
   };
 };
