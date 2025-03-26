@@ -13,4 +13,17 @@ export interface User {
   contact?: string | null;
   profilePicture?: string | null;
   resume?: string | null;
+  educations?: Education[];
+}
+
+export interface Education {
+  id: number;
+  school: string;
+  degree?: string | null;
+  field?: string | null;
+  startYear?: number | null;
+  endYear?: number | null;
+  grade?: string | null;
+  activities?: string | null;
+  description?: string | null;
 }

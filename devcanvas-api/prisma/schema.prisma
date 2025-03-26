@@ -22,4 +22,24 @@ model User {
   linkedUrl String?
   workEmail String?
   publishPortfolio Boolean @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  educations  Education[]
+}
+
+
+model Education {
+  id           Int      @id @default(autoincrement())
+  school       String
+  degree       String?
+  field        String?
+  startYear    DateTime?
+  endYear      DateTime?
+  grade        String?
+  activities   String?
+  description  String?
+  userId       Int
+  user         User     @relation(fields: [userId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }

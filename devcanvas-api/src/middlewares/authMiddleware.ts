@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { prisma } from "../db/prisma"; // Prisma client
-import { User } from "../types/userType";
+import { User } from "../utils/types";
 
 export interface AuthenticatedRequest extends Request {
   user?: User; // Make it optional for type compatibility
@@ -20,7 +20,10 @@ export const authenticateUser = async (
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: number };
-    const user = await prisma.user.findUnique({ where: { id: Number(decoded?.userId) } });
+    const user = await prisma.user.findUnique({
+      where: { id:  Number(decoded?.userId) },
+      // include: { educations: true },
+    });
 
     if (!user) {
       return res.status(401).json({ error: "Invalid token" });
