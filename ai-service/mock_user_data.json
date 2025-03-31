@@ -1,0 +1,54 @@
+{
+    "personal_info": {
+        "name": "Amiya ",
+        "email": "amiya@ri.ark",
+        "phone": "0441112222",
+        "location": "Terra"
+    },
+    "education": [
+        {
+        "degree": "Bsc. Computer Science",
+        "school": "Havard University",
+        "year": "2015"
+        }
+    ],
+    "experience": [
+        {
+        "title": "Senior Software Engineer",
+        "company": "Rohdes Island",
+        "duration": "2019-2025",
+        "responsibilities": [
+            "Promoted from Junior Developer after demonstrating strong ownership of key features in the company’s SaaS platform.", 
+            "Led a team of 3 developers to redesign and optimize a high-traffic customer dashboard, reducing load times by 40% through React performance tuning and backend query optimization.",
+            "Architected and implemented a real-time WebSocket notification system using Node.js, Express, and Socket.io, improving user engagement metrics by 25%.",
+            "Mentored 2 junior developers, conducting code reviews and introducing best practices in TypeScript, testing (Jest/Cypress), and CI/CD pipelines.",
+            "Collaborated with product managers to refine Agile workflows, reducing sprint cycle times by 15% while maintaining high code quality."
+        ]
+        },
+        {
+        "title": "Software Engineer",
+        "company": "Lungmen",
+        "duration": "2015-2019",
+        "responsibilities": [
+            "Developed and maintained RESTful APIs using Node.js, Express, and MongoDB, supporting over 50K monthly active users.",
+            "Built responsive front-end components with React and Redux, improving UX and accessibility compliance.",
+            "Automated deployment processes using GitHub Actions and AWS, reducing manual deployment errors by 30%.",
+            "Assisted in migrating a legacy jQuery codebase to React, improving maintainability and performance.",
+            "Worked closely with QA engineers to write unit and integration tests (Jest, React Testing Library), increasing test coverage from 60% to 85%."
+            ]
+        }
+    ],
+    "projects": [
+        {
+        "title": "TaskFlow",
+        "description": "A Trello-like task management tool with real-time updates, drag-and-drop functionality, and team collaboration features. Built to solve inefficiencies in remote team coordination.",
+        "technologies": ["React", "Redux", "Tailwind", "Node", "Express", "PostgreSQL"]
+        },
+        {
+        "title": "DevLog",
+        "description": "A minimalist blogging platform for developers, featuring syntax-highlighted code snippets, dark/light mode, and GitHub-flavored Markdown support.",
+        "technologies": ["React", "Redux", "Tailwind", "Node", "Express", "PostgreSQL"]
+        }
+    ],
+    "skills": ["React", "Node", "Javascript", "Typescript", "AWS", "MongoDB", "Express", "Jest"]
+}
