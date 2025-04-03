@@ -16,8 +16,8 @@ const login = createAsyncThunk(
     try {
       const auth = await canvasApi.post("/api/v1/login/", { email, password });
 
-      if (304 <= auth?.status) {
-        return rejectWithValue(auth?.data?.message);
+      if (400 <= auth?.status) {
+        return rejectWithValue(auth?.data?.error);
       }
       return auth.data;
     } catch (error) {
@@ -67,9 +67,9 @@ const authSlice = createSlice({
         // Handle the success case for login
         state.loading = false;
         state.isAuthenticated = true;
-        state.authToken = action.payload.auth_token;
+        state.authToken = action.payload.token;
         localStorage.setItem("is_logged_in", true);
-        localStorage.setItem("auth_token", JSON.stringify(action.payload.auth_token));
+        localStorage.setItem("auth_token", JSON.stringify(action.payload.token));
       })
       .addCase(login.rejected, (state, action) => {
         // Handle the error case for login
@@ -86,9 +86,9 @@ const authSlice = createSlice({
         // Handle the success case for signup
         state.loading = false;
         state.isAuthenticated = true;
-        state.authToken = action.payload.auth_token;
+        state.authToken = action.payload.token;
         localStorage.setItem("is_logged_in", true);
-        localStorage.setItem("auth_token", JSON.stringify(action.payload.auth_token));
+        localStorage.setItem("auth_token", JSON.stringify(action.payload.token));
       })
       .addCase(signup.rejected, (state, action) => {
         // Handle the error case for signup

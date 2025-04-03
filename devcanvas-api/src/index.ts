@@ -29,10 +29,12 @@ app.use((req, res, next) => {
 });
 
 const corsOptions = {
-  origin: 'http://localhost:3001', // Frontend URL
+  origin: ['*', 'http://localhost:3001'], // Frontend URL
   credentials: true, // Allow cookies/auth headers
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Ensure OPTIONS is included
-  allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Expires', 'Pragma'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'], // Ensure OPTIONS is included
+  // allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Expires', 'Pragma', 'auth_token'],
+  // allowedHeaders: '*',
+
 };
 
 app.use(cors(corsOptions));

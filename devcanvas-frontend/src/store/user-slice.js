@@ -3,7 +3,7 @@ import canvasApi from "../api";
 
 const fetchUser = createAsyncThunk("fetchUser/profileSlice", async () => {
   try {
-    const profile = await canvasApi.get("/api/v1/users/show_profile", {
+    const profile = await canvasApi.get("/api/v1/user/profile", {
       headers: {
         auth_token: `${JSON.parse(localStorage.getItem("auth_token"))}`,
       },
@@ -17,8 +17,8 @@ const editUser = createAsyncThunk(
   "editUser/profileSlice",
   async (formData, { rejectWithValue }) => {
     try {
-      const profile = await canvasApi.patch(
-        "/api/v1/users/",
+      const profile = await canvasApi.put(
+        "/api/v1/user/update",
         formData ,
         {
           headers: {

@@ -26,7 +26,7 @@ function AboutMe({ data, isPublic }) {
         .unwrap()
         .then((result) => {
           setProfileData(result);
-          setPortfolioPublished(result?.publish_portfolio)
+          setPortfolioPublished(result?.publishPortfolio)
         });
     }
   }, [dispatch, isPublic, data, portfolioPublished]);
@@ -62,12 +62,12 @@ function AboutMe({ data, isPublic }) {
             />
           </div>
 
-          <h6 className="font-medium text-gray-600 text-lg md:text-5xl uppercase mb-8">{profileData?.first_name} {profileData?.last_name}</h6>
+          <h6 className="font-medium text-gray-600 text-lg md:text-5xl uppercase mb-8">{profileData?.firstName} {profileData?.lastName}</h6>
 
           <p className="font-normal text-gray-900 text-3xl md:text-4xl leading-none mb-8">{profileData?.title}</p>
 
           <p className="font-bold text-gray-600 text-md md:text-xl mb-16">{profileData?.headline}</p>
-          <p className="font-normal text-gray-600 text-md md:text-xl mb-16">{profileData?.about_me}</p>
+          <p className="font-normal text-gray-600 text-md md:text-xl mb-16">{profileData?.aboutMe}</p>
 
           {!isPublic && (
             <div className="justify-items-center">
