@@ -4,7 +4,7 @@ import canvasApi from "../api";
 const initialExperienceState = {
   title: "",
   description: "",
-  employment_type: "",
+  employmentType: "",
   company: "",
   location: "",
   industry: "",
@@ -30,13 +30,13 @@ const fetchExperiences = createAsyncThunk("fetctExperience/experienceSlice", asy
 const updateExperience = createAsyncThunk(
   "updateExperience/experienceSlice",
   async (
-    { title, description, employment_type, company, location, industry, start_date, end_date, headline, id },
+    { title, description, employmentType, company, location, industry, startDate, endDate, headline, id },
     { rejectWithValue }
   ) => {
     try {
-      const experience = await canvasApi.patch(
+      const experience = await canvasApi.put(
         `/api/v1/experiences/${id}`,
-        {   title, description, employment_type, company, location, industry, start_date, end_date, headline },
+        {   title, description, employmentType, company, location, industry, startDate, endDate, headline },
         {
           headers: {
             auth_token: `${JSON.parse(localStorage.getItem("auth_token"))}`,
@@ -53,13 +53,13 @@ const updateExperience = createAsyncThunk(
 const addExperience = createAsyncThunk(
   "addExperience/experienceSlice",
   async (
-    { title, description, employment_type, company, location, industry, start_date, end_date, headline},
+    { title, description, employmentType, company, location, industry, startDate, endDate, headline},
     { rejectWithValue }
   ) => {
     try {
       const experience = await canvasApi.post(
         "/api/v1/experiences/",
-        { title, description, employment_type, company, location, industry, start_date, end_date, headline },
+        { title, description, employmentType, company, location, industry, startDate, endDate, headline },
         {
           headers: {
             auth_token: `${JSON.parse(localStorage.getItem("auth_token"))}`,

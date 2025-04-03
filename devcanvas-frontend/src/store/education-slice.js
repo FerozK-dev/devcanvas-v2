@@ -29,13 +29,13 @@ const fetchEducations = createAsyncThunk("fetctEducation/educationSlice", async 
 const updateEducation = createAsyncThunk(
   "updateEducation/educationSlice",
   async (
-    { description, start_year, end_year, school, degree, field, grade, activities, id },
+    { description, startYear, endYear, school, degree, field, grade, activities, id },
     { rejectWithValue }
   ) => {
     try {
-      const education = await canvasApi.patch(
+      const education = await canvasApi.put(
         `/api/v1/educations/${id}`,
-        { description, start_year, end_year, school, degree, field, grade, activities },
+        { description, startYear, endYear, school, degree, field, grade, activities },
         {
           headers: {
             auth_token: `${JSON.parse(localStorage.getItem("auth_token"))}`,
@@ -52,13 +52,13 @@ const updateEducation = createAsyncThunk(
 const addEducation = createAsyncThunk(
   "addEducation/educationSlice",
   async (
-    { description, start_year, end_year, school, degree, field, grade, activities },
+    { description, startYear, endYear, school, degree, field, grade, activities },
     { rejectWithValue }
   ) => {
     try {
       const education = await canvasApi.post(
         "/api/v1/educations/",
-        { description, start_year, end_year, school, degree, field, grade, activities },
+        { description, startYear, endYear, school, degree, field, grade, activities },
         {
           headers: {
             auth_token: `${JSON.parse(localStorage.getItem("auth_token"))}`,
@@ -98,7 +98,7 @@ const educationSlice = createSlice({
       .addCase(fetchEducations.fulfilled, (state, action) => {
         state.allEducations = action.payload;
       })
-      .addCase(fetchEducations.rejected, (state, action) => {}) 
+      .addCase(fetchEducations.rejected, (state, action) => {})
       .addCase(updateEducation.pending, (state) => {})
       .addCase(updateEducation.fulfilled, (state, action) => {})
       .addCase(updateEducation.rejected, (state, action) => {
@@ -113,7 +113,7 @@ const educationSlice = createSlice({
       .addCase(deleteEducation.fulfilled, (state, action) => {})
       .addCase(deleteEducation.rejected, (state, action) => {
         state.error = action.payload.message;
-      }) 
+      })
     }
 });
 

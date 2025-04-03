@@ -14,25 +14,27 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-// app.use((req, res, next) => {
-//   console.log('Received request:', req.method, req.url);
-//   console.log('Origin:', req.headers.origin);
-//   next();
-// });
-
-// Enable CORS with explicit options
 app.use((req, res, next) => {
   console.log(`🔹 Request: ${req.method} ${req.url}`);
   console.log(`🔹 Origin: ${req.headers.origin}`);
   console.log(`🔹 Headers:`, req.headers);
+
+  if (req.body && Object.keys(req.body).length > 0) {
+    console.log(`🔹 Body:`, JSON.stringify(req.body, null, 2)); // Pretty print body
+  } else {
+    console.log(`🔹 Body: [No body or empty]`);
+  }
+
   next();
 });
 
 const corsOptions = {
-  origin: 'http://localhost:3001', // Frontend URL
+  origin: ['*', 'http://localhost:3001'], // Frontend URL
   credentials: true, // Allow cookies/auth headers
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Ensure OPTIONS is included
-  allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Expires', 'Pragma'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'], // Ensure OPTIONS is included
+  // allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Expires', 'Pragma', 'auth_token'],
+  // allowedHeaders: '*',
+
 };
 
 app.use(cors(corsOptions));

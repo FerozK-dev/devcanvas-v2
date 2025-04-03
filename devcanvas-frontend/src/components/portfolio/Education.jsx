@@ -48,12 +48,17 @@ function Education({ data, isPublic }){
     setEditModalOpen(true);
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.getFullYear(); // Extracts only the year
+  };
+
   const renderEducation = educations?.map((education) => {
-    const { id, description, start_year, end_year, school, degree, field, grade, activities} = education;
+    const { id, description, startYear, endYear, school, degree, field, grade, activities} = education;
     return (
       <div className="bg-gray-50 px-8 py-10 rounded-md" key={id}>
         <h4 className="font-medium text-gray-700 text-lg mb-4">{school}</h4>
-        <p className="font-small text-gray-700 text-lg mb-4">{start_year} - {end_year} {degree} {field}</p>
+        <p className="font-small text-gray-700 text-lg mb-4">{formatDate(startYear)} - {formatDate(endYear)} {degree} {field}</p>
         <p className="font-normal text-gray-500 text-md mb-4">{description}</p>
 
         <div className="relative">

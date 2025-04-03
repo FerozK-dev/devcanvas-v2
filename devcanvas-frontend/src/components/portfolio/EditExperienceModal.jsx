@@ -23,8 +23,8 @@ function EditExpereience({ isOpen, onClose, experience, setExperiences, experien
       title: title,
       description: description,
       company: company,
-      end_date: endDate,
-      start_date: startDate,
+      endDate: endDate,
+      startDate: startDate,
       location: location
     }
 
@@ -33,8 +33,8 @@ function EditExpereience({ isOpen, onClose, experience, setExperiences, experien
       title: title,
       description: description,
       company: company,
-      end_date: endDate,
-      start_date: startDate,
+      endDate: endDate,
+      startDate: startDate,
       location: location
     }))
       .unwrap()
@@ -57,8 +57,8 @@ function EditExpereience({ isOpen, onClose, experience, setExperiences, experien
       setTitle(experience.title || "");
       setDescription(experience.description || "");
       setCompany(experience.company || "");
-      setStartDate(experience.start_date || "");
-      setEndDate(experience.end_date || "");
+      setStartDate(experience.startDate || "");
+      setEndDate(experience.endDate || "");
       setLocation(experience.location || "");
 
     }

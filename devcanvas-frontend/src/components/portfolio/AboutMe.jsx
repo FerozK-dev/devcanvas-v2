@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUser, togglePublish } from "../../store/user-slice"
 import EditUserModal from "./EditUserModal"
 import toast, { Toaster } from "react-hot-toast";
+import blankProfile from"./../../images/profile-blank.png"
 
 function AboutMe({ data, isPublic }) {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -26,7 +27,7 @@ function AboutMe({ data, isPublic }) {
         .unwrap()
         .then((result) => {
           setProfileData(result);
-          setPortfolioPublished(result?.publish_portfolio)
+          setPortfolioPublished(result?.publishPortfolio)
         });
     }
   }, [dispatch, isPublic, data, portfolioPublished]);
@@ -56,18 +57,18 @@ function AboutMe({ data, isPublic }) {
         <div className="text-center">
           <div className="flex justify-center my-16">
             <img
-              src={profileData?.profile_picture}
+              src={profileData?.profilePicture ? profileData?.profilePicture : blankProfile}
               alt="Profile"
               className="w-64 h-64 rounded-full"
             />
           </div>
 
-          <h6 className="font-medium text-gray-600 text-lg md:text-5xl uppercase mb-8">{profileData?.first_name} {profileData?.last_name}</h6>
+          <h6 className="font-medium text-gray-600 text-lg md:text-5xl uppercase mb-8">{profileData?.firstName} {profileData?.lastName}</h6>
 
           <p className="font-normal text-gray-900 text-3xl md:text-4xl leading-none mb-8">{profileData?.title}</p>
 
           <p className="font-bold text-gray-600 text-md md:text-xl mb-16">{profileData?.headline}</p>
-          <p className="font-normal text-gray-600 text-md md:text-xl mb-16">{profileData?.about_me}</p>
+          <p className="font-normal text-gray-600 text-md md:text-xl mb-16">{profileData?.aboutMe}</p>
 
           {!isPublic && (
             <div className="justify-items-center">

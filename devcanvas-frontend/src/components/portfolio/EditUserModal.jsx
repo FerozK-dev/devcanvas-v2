@@ -24,15 +24,15 @@ function EditUserModal({ isOpen, onClose, profile, setProfileData }) {
   useEffect(() => {
     if (isOpen && profile) {
       setTitle(profile.title || "");
-      setLName(profile.last_name || "");
-      setFName(profile.first_name || "");
+      setLName(profile.lastName || "");
+      setFName(profile.firstName || "");
       setLocation(profile.location || "");
-      setAboutMe(profile.about_me || "");
+      setAboutMe(profile.aboutMe || "");
       setContact(profile.contact || "");
       setHeadline(profile.headline || "");
-      setGithubUrl(profile.github_url || "");
-      setLinkedUrl(profile.linked_url || "");
-      setWorkEmail(profile.work_email || "");
+      setGithubUrl(profile.githubUrl || "");
+      setLinkedUrl(profile.linkedUrl || "");
+      setWorkEmail(profile.workEmail || "");
       // setProfilePic(profile?.profile_picture);
       // setResume(profile?.resume);
     }
@@ -43,20 +43,20 @@ function EditUserModal({ isOpen, onClose, profile, setProfileData }) {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("first_name", firstName);
-    formData.append("last_name", lastName);
+    formData.append("firstName", firstName);
+    formData.append("lastName", lastName);
     formData.append("title", title);
     formData.append("location", location);
-    formData.append("about_me", aboutMe);
+    formData.append("aboutMe", aboutMe);
     formData.append("contact", contact);
     formData.append("headline", headline);
-    // formData.append("github_url", githubUrl);
-    // formData.append("linked_url", linkedUrl);
-    // formData.append("work_email", workEmail);
+    // formData.append("githubUrl", githubUrl);
+    // formData.append("linkedUrl", linkedUrl);
+    // formData.append("workEmail", workEmail);
     // formData.append("resume", resume);
 
     if (profilePic) {
-      formData.append("profile_picture", profilePic);
+      formData.append("profilePicture", profilePic);
     }
 
     dispatch(editUser(formData))

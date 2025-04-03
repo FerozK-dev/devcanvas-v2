@@ -24,12 +24,11 @@ const fetchProjects = createAsyncThunk("fetctProjects/projectsSlice", async () =
 const updateProject = createAsyncThunk(
   "updateProject/projectsSlice",
   async (
-    formData,
-    { rejectWithValue }
+    { id, formData }, { rejectWithValue }
   ) => {
     try {
-      const project = await canvasApi.patch(
-        `/api/v1/projects/${formData.getAll("id")}`,
+      const project = await canvasApi.put(
+        `/api/v1/projects/${id}`,
         formData,
         {
           headers: {
@@ -93,7 +92,7 @@ const projectsSlice = createSlice({
       .addCase(fetchProjects.fulfilled, (state, action) => {
         state.allProjects = action.payload;
       })
-      .addCase(fetchProjects.rejected, (state, action) => {}) 
+      .addCase(fetchProjects.rejected, (state, action) => {})
       .addCase(updateProject.pending, (state) => {})
       .addCase(updateProject.fulfilled, (state, action) => {})
       .addCase(updateProject.rejected, (state, action) => {
@@ -108,7 +107,7 @@ const projectsSlice = createSlice({
       .addCase(deleteProject.fulfilled, (state, action) => {})
       .addCase(deleteProject.rejected, (state, action) => {
         state.error = action.payload.message;
-      }) 
+      })
     }
 });
 
