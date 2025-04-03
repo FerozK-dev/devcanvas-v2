@@ -20,8 +20,8 @@ function AddExpereience({ isOpen, onClose, setExperiences }) {
       title: title,
       description: description,
       company: company,
-      end_date: endDate,
-      start_date: startDate,
+      endDate: endDate,
+      startDate: startDate,
       location: location
     }
 
@@ -29,8 +29,8 @@ function AddExpereience({ isOpen, onClose, setExperiences }) {
       title: title,
       description: description,
       company: company,
-      end_date: endDate,
-      start_date: startDate,
+      endDate: endDate,
+      startDate: startDate,
       location: location
     }))
       .unwrap()

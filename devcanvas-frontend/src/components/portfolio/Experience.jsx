@@ -48,8 +48,13 @@ function Experience({ data, isPublic }) {
     setEditModalOpen(true);
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.getFullYear(); // Extracts only the year
+  };
+
   const renderExperience = experiences?.map((experience) => {
-    const { id, title, description, employment_type, company, location, industry, start_date, end_date, headline } = experience;
+    const { id, title, description, employmentType, company, location, industry, startDate, endDate, headline } = experience;
     return (
       <div
         key={id}
@@ -82,7 +87,7 @@ function Experience({ data, isPublic }) {
           <h6 className="font-medium text-gray-400 text-base uppercase">
             Year
           </h6>
-          <p className="font-normal text-gray-400 text-base">{start_date} - {end_date}</p>
+          <p className="font-normal text-gray-400 text-base">{formatDate(startDate)} - {formatDate(endDate)}</p>
         </div>
         {!isPublic && (
           <div className="justify-items-end mt-10">

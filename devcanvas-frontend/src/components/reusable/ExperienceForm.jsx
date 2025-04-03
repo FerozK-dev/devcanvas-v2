@@ -76,8 +76,9 @@ const ExperienceForm = ({
           inputId="start_date"
           inputName="start_date"
           ariaLabelName="start date"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
+          value={startDate ? new Date(startDate).toISOString().split("T")[0] : ""}
+          onChange={(e) => setStartDate(new Date(e.target.value).toISOString())}
+
         />
         <FormInput
           inputLabel="End Date"
@@ -86,8 +87,8 @@ const ExperienceForm = ({
           inputId="end_date"
           inputName="end_date"
           ariaLabelName="end date"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
+          value={endDate ? new Date(endDate).toISOString().split("T")[0] : ""}
+          onChange={(e) => setEndDate(new Date(e.target.value).toISOString())}
         />
       </div>
       <Button title="Save" />
