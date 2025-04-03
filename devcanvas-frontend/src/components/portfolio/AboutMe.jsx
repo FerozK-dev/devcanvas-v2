@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUser, togglePublish } from "../../store/user-slice"
 import EditUserModal from "./EditUserModal"
 import toast, { Toaster } from "react-hot-toast";
+import blankProfile from"./../../images/profile-blank.png"
 
 function AboutMe({ data, isPublic }) {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -56,7 +57,7 @@ function AboutMe({ data, isPublic }) {
         <div className="text-center">
           <div className="flex justify-center my-16">
             <img
-              src={profileData?.profile_picture}
+              src={profileData?.profilePicture ? profileData?.profilePicture : blankProfile}
               alt="Profile"
               className="w-64 h-64 rounded-full"
             />

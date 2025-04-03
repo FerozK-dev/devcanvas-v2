@@ -20,7 +20,7 @@ function AddProjects({ isOpen, onClose, setProjects }) {
     formData.append("description", description);
 
     if (picture) {
-      formData.append("display_image", picture);
+      formData.append("displayImage", picture);
     }
 
     dispatch(addProject(formData))

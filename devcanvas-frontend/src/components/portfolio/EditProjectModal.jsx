@@ -15,7 +15,7 @@ function EditProject({ isOpen, onClose, project, setProjects, projects }) {
     if (isOpen && project) {
       setTitle(project.title || "");
       setDescription(project.description || "");
-      setPicture(project.dipslay_image || "");
+      setPicture(project.dipslayImage || "");
     }
   }, [isOpen]);
 
@@ -26,26 +26,25 @@ function EditProject({ isOpen, onClose, project, setProjects, projects }) {
       title: title,
       description: description,
       id: project.id,
-      dipslay_image: picture
+      dipslayImage: picture
     }
 
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
-    formData.append("id", project.id)
 
     if (picture) {
-      formData.append("display_image", picture);
+      formData.append("displayImage", picture);
     }
 
-    dispatch(updateProject(formData))
+    dispatch(updateProject({ id: project.id, formData }))
       .unwrap()
       .then((originalPromiseResult) => {
         toast("Project Updated")
         onClose()
         setProjects(() =>
           projects?.map((exp) =>
-            exp?.id === project?.id ? originalPromiseResult : exp
+            exp?.id === project?.id ? originalPromiseResult.project : exp
           )
         );
       })

@@ -5,6 +5,7 @@ import AddProjects from "./AddProjectModal";
 import EditProject from "./EditProjectModal";
 import Button from "../reusable/Button";
 import toast from "react-hot-toast";
+import projectBlank from "../../images/project-blank.png"
 
 function Projects({ data, isPublic }) {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -51,13 +52,13 @@ function Projects({ data, isPublic }) {
   };
 
   const renderProjects = projects?.map((project) => {
-    const { id, description, title, display_image } = project;
+    const { id, description, title, displayImage } = project;
     return (
       // <div className="flex space-x-6" key={id}>
       <div className="flex flex-col lg:flex-row space-y-6 lg:space-y-0 lg:space-x-6" key={id}>
         <div className=" w-96">
           <img
-            src={display_image}
+            src={displayImage? displayImage : projectBlank }
             alt="Profile"
             className="h-40 rounded-lg object-cover"
           />
