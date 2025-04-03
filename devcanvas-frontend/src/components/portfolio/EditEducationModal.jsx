@@ -23,8 +23,8 @@ function EditEducationModal({ isOpen, onClose, education, setEducations, educati
     const newEducation = {
       id: education?.id,
       description: description,
-      start_year: startYear,
-      end_year: endYear,
+      startYear: startYear,
+      endYear: endYear,
       school: school,
       degree: degree,
       field: field,
@@ -35,8 +35,8 @@ function EditEducationModal({ isOpen, onClose, education, setEducations, educati
     dispatch(updateEducation({
       id: education?.id,
       description: description,
-      start_year: startYear,
-      end_year: endYear,
+      startYear: startYear,
+      endYear: endYear,
       school: school,
       degree: degree,
       field: field,
@@ -63,8 +63,8 @@ function EditEducationModal({ isOpen, onClose, education, setEducations, educati
       setSchool(education?.school || "");
       setDescription(education?.description || "");
       setDegree(education?.degree || "");
-      setStartYear(education?.start_year || "");
-      setEndYear(education?.end_year || "");
+      setStartYear(education?.startYear || "");
+      setEndYear(education?.endYear || "");
       setField(education?.field || "");
       setGrade(education.grade || "");
       // setDescription(education.description || "");

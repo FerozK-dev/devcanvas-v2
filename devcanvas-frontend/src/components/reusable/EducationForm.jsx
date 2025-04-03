@@ -2,13 +2,13 @@ import FormInput from "./FormInput";
 import Button from "./Button";
 
 const EducationForm = ({
-  description, 
-  startYear, 
-  endYear, 
-  school, 
-  degree, 
-  field, 
-  grade, 
+  description,
+  startYear,
+  endYear,
+  school,
+  degree,
+  field,
+  grade,
   activities,
   setStartYear,
   setEndYear,
@@ -80,8 +80,8 @@ const EducationForm = ({
           inputId="start_Year"
           inputName="start_Year"
           ariaLabelName="start Year"
-          value={startYear}
-          onChange={(e) => setStartYear(e.target.value)}
+          value={startYear ? new Date(startYear).toISOString().split("T")[0] : ""}
+          onChange={(e) => setStartYear(new Date(e.target.value).toISOString())}
         />
         <FormInput
           inputLabel="End Year"
@@ -90,11 +90,11 @@ const EducationForm = ({
           inputId="end_Year"
           inputName="end_Year"
           ariaLabelName="end Year"
-          value={endYear}
-          onChange={(e) => setEndYear(e.target.value)}
+          value={endYear ? new Date(endYear).toISOString().split("T")[0] : ""}
+          onChange={(e) => setEndYear(new Date(e.target.value).toISOString())}
         />
         <FormInput
-          inputLabel="grade"
+          inputLabel="Grade"
           labelFor="grade"
           inputType="number"
           inputId="grade"

@@ -39,7 +39,7 @@ const togglePublish = createAsyncThunk(
   async (_,{ rejectWithValue }) => {
     try {
       const response = await canvasApi.patch(
-        `/api/v1/users/toggle_portfolio_status`,
+        `/api/v1/user/toggle-portfolio-status`,
         {},
         {
           headers: {

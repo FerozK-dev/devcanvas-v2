@@ -20,8 +20,8 @@ function AddEducationModal({ isOpen, onClose, setEducations }) {
 
     dispatch(addEducation({
       description: description,
-      start_year: startYear,
-      end_year: endYear,
+      startYear: startYear,
+      endYear: endYear,
       school: school,
       degree: degree,
       field: field,
