@@ -9,7 +9,7 @@ const canvasApi = axios.create({
   withCredentials: true,
   headers: {
     "Cache-Control": "no-cache, no-store, must-revalidate",
-    'Content-Type': 'application/json',
+    // 'Content-Type': 'application/json',
     Pragma: "no-cache",
     Expires: "0",
   },

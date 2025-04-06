@@ -8,11 +8,12 @@ import experienceRoutes from './routes/experienceRoutes'
 import projectRoutes from './routes/projectRoutes'
 import portfolioRoutes from './routes/portfolioRoutes'
 import listEndpoints from 'express-list-endpoints';
+import path from 'path';
+
 
 dotenv.config();
 
 const app = express();
-app.use(express.json());
 
 app.use((req, res, next) => {
   console.log(`🔹 Request: ${req.method} ${req.url}`);
@@ -43,9 +44,13 @@ app.options('*', cors(corsOptions)); // Handle preflight requests
 app.use('/api/v1/', authRoutes);
 app.use('/api/v1/', userRoutes);
 app.use('/api/v1/', educationRoutes);
-app.use('/api/v1/', experienceRoutes)
-app.use('/api/v1/', projectRoutes)
-app.use('/api/v1/', portfolioRoutes)
+app.use('/api/v1/', experienceRoutes);
+app.use('/api/v1/', projectRoutes);
+app.use('/api/v1/', portfolioRoutes);
+app.use('/storage', express.static(path.join(__dirname, 'public/storage')));
+
+app.use(express.json());
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

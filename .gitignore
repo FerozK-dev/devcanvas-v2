@@ -56,3 +56,5 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 /.vscode
+/devcanvas-api/public/storage
+/tmp/uploads
