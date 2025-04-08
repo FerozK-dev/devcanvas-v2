@@ -46,47 +46,6 @@ export const createProject = async (req: AuthenticatedRequest, res: Response) =>
   }
 };
 
-// Update an project for the current user
-// export const updateProject = async (req: AuthenticatedRequest, res: Response) => {
-//   try {
-//     const projectId = Number(req.params.id);
-//     const projectData = req.body;
-
-//     const project = await prisma.project.findUnique({
-//       where: { id: projectId },
-//     });
-
-//     debugger
-
-//     if (!project || project.userId !== req.user!.id) {
-//       return res.status(404).json({ error: "Project not found or unauthorized" });
-//     }
-
-//     if (req.file) {
-//       if (project?.displayImage) {
-//         await storage.delete(project.displayImage);
-//       }
-//       const file = req.file
-
-//       if (file.displayImage) {
-//         projectData.displayImage = await storage.upload(
-//           file.displayImage[0],
-//           'project-images'
-//         );
-//       }
-//     }
-
-//     const updatedProject = await prisma.project.update({
-//       where: { id: projectId },
-//       data: projectData,
-//     });
-
-//     return res.json({ message: "project updated successfully", project: serializeProject(updatedProject) });
-//   } catch (error) {
-//     return res.status(400).json({ error: "Failed to update project" });
-//   }
-// };
-
 export const updateProject = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const projectId = Number(req.params.id);
