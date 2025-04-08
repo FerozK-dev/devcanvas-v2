@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.schemas import ResumeResponse, ResumeInput
+from app.schemas import Resume, ResumeResponse
 from app.services.agent import generate_resume 
 
 router = APIRouter(
@@ -8,6 +8,7 @@ router = APIRouter(
 )
 
 @router.post("/create-resume", response_model=ResumeResponse)
-async def create_resume(resume_input: ResumeInput):
-    generate_resume(resume_input)
-    return ResumeResponse(experience="Nothing")
+async def create_resume(resume_input: Resume) -> ResumeResponse:
+    public_attributes = generate_resume(resume_input)
+
+    return ResumeResponse(personal_info=resume_input.personal_info, **public_attributes.model_dump())

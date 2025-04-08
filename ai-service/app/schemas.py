@@ -1,8 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
 
-class ResumeResponse(BaseModel):
-    experience: str
 
 class InfoEntry(BaseModel):
     name: str
@@ -26,10 +24,19 @@ class ProjectEntry(BaseModel):
     description: str
     technologies: list[str]
 
-class ResumeInput(BaseModel):
-    personal_info: InfoEntry
+class ResumePublicAttributes(BaseModel):
     education: list[EducationEntry]
     experience: list[ExperienceEntry]
     projects: list[ProjectEntry]
     skills: list[str]
     job_description: Optional[str] = None
+
+class ResumeGenerateResult(ResumePublicAttributes):
+    summary: str
+
+class ResumeResponse(ResumeGenerateResult):
+    personal_info: InfoEntry
+
+class Resume(ResumePublicAttributes):
+    personal_info: InfoEntry
+    

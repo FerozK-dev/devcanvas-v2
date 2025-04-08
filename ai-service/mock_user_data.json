@@ -18,11 +18,11 @@
         "company": "Rohdes Island",
         "duration": "2019-2025",
         "responsibilities": [
-            "Promoted from Junior Developer after demonstrating strong ownership of key features in the company’s SaaS platform.", 
-            "Led a team of 3 developers to redesign and optimize a high-traffic customer dashboard, reducing load times by 40% through React performance tuning and backend query optimization.",
-            "Architected and implemented a real-time WebSocket notification system using Node.js, Express, and Socket.io, improving user engagement metrics by 25%.",
-            "Mentored 2 junior developers, conducting code reviews and introducing best practices in TypeScript, testing (Jest/Cypress), and CI/CD pipelines.",
-            "Collaborated with product managers to refine Agile workflows, reducing sprint cycle times by 15% while maintaining high code quality."
+            "Did some coding in JavaScript and React.", 
+            "Fixed bugs in the app.",
+            "Used Node.js for backend stuff.",
+            "Helped the team with projects.",
+            "Talked to PMs sometimes."
         ]
         },
         {
@@ -30,11 +30,11 @@
         "company": "Lungmen",
         "duration": "2015-2019",
         "responsibilities": [
-            "Developed and maintained RESTful APIs using Node.js, Express, and MongoDB, supporting over 50K monthly active users.",
-            "Built responsive front-end components with React and Redux, improving UX and accessibility compliance.",
-            "Automated deployment processes using GitHub Actions and AWS, reducing manual deployment errors by 30%.",
-            "Assisted in migrating a legacy jQuery codebase to React, improving maintainability and performance.",
-            "Worked closely with QA engineers to write unit and integration tests (Jest, React Testing Library), increasing test coverage from 60% to 85%."
+            "Worked on frontend and backend.",
+            "Made APIs with Express.",
+            "Used MongoDB for the database.",
+            "Did testing sometimes.",
+            "Went to meetings."
             ]
         }
     ],
