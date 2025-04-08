@@ -57,8 +57,12 @@ function AboutMe({ data, isPublic }) {
         <div className="text-center">
           <div className="flex justify-center my-16">
             <img
-              src={profileData?.profilePicture ? profileData?.profilePicture : blankProfile}
-              alt="Profile"
+              src={profileData?.profilePicture}
+              alt="Project display"
+              onError={(e) => {
+                e.currentTarget.src = blankProfile // Fallback image
+              }}
+              style={{ maxWidth: '100%', height: 'auto' }}
               className="w-64 h-64 rounded-full"
             />
           </div>

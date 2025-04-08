@@ -2,8 +2,9 @@ import { Response } from "express";
 import { prisma } from "../db/prisma";
 import { AuthenticatedRequest } from "../middlewares/authMiddleware";
 import { serializeProject } from "../utils/serializers";
+import storage from '../utils/storageService';
 
-export const getProjects = async (req: AuthenticatedRequest, res: Response) => {
+export const getProjects = async (req: AuthenticatedRequest, res: Response ): Promise<void> => {
   try {
     const projects = await prisma.project.findMany({
       where: {
@@ -11,15 +12,26 @@ export const getProjects = async (req: AuthenticatedRequest, res: Response) => {
       }
     });
 
-    return res.json(projects.map(serializeProject));
+    res.json(projects.map(serializeProject));
   } catch (error) {
-    return res.status(500).json({ error: "Failed to fetch projects" });
+    res.status(500).json({ error: "Failed to fetch projects" });
   }
 }
 
-export const createProject = async (req: AuthenticatedRequest, res: Response) => {
+export const createProject = async (req: AuthenticatedRequest, res: Response ): Promise<void> => {
   try {
     const projectData = req.body;
+
+    if (req.files) {
+      const files = req.files as Record<string, Express.Multer.File[]>;
+
+      if (files.displayImage) {
+        projectData.displayImage = await storage.upload(
+          files.displayImage[0],
+          'project-demo-images'
+        );
+      }
+    }
 
     const newProject = await prisma.project.create({
       data: {
@@ -28,14 +40,13 @@ export const createProject = async (req: AuthenticatedRequest, res: Response) =>
       },
     });
 
-    return res.status(201).json(serializeProject(newProject));
+    res.status(201).json(serializeProject(newProject));
   } catch (error) {
-    return res.status(400).json({ error: "Failed to create project" });
+    res.status(400).json({ error: "Failed to create project" });
   }
 };
 
-// Update an project for the current user
-export const updateProject = async (req: AuthenticatedRequest, res: Response) => {
+export const updateProject = async (req: AuthenticatedRequest, res: Response ): Promise<void> => {
   try {
     const projectId = Number(req.params.id);
     const projectData = req.body;
@@ -44,8 +55,15 @@ export const updateProject = async (req: AuthenticatedRequest, res: Response) =>
       where: { id: projectId },
     });
 
-    if (!project || project.userId !== req.user!.id) {
-      return res.status(404).json({ error: "Project not found or unauthorized" });
+    if (req.file) {
+      if (project?.displayImage) {
+        await storage.delete(project.displayImage);
+      }
+
+      projectData.displayImage = await storage.upload(
+        req.file,
+        'project-demo-images'
+      );
     }
 
     const updatedProject = await prisma.project.update({
@@ -53,14 +71,14 @@ export const updateProject = async (req: AuthenticatedRequest, res: Response) =>
       data: projectData,
     });
 
-    return res.json({ message: "project updated successfully", project: serializeProject(updatedProject) });
+    res.json({ message: "project updated successfully", project: serializeProject(updatedProject) });
   } catch (error) {
-    return res.status(400).json({ error: "Failed to update project" });
+    res.status(400).json({ error: "Failed to update project" });
   }
 };
 
 // Delete an education for the current user
-export const deleteProject = async (req: AuthenticatedRequest, res: Response) => {
+export const deleteProject = async (req: AuthenticatedRequest, res: Response ): Promise<void> => {
   try {
     const projectId = Number(req.params.id);
 
@@ -69,15 +87,15 @@ export const deleteProject = async (req: AuthenticatedRequest, res: Response) =>
     });
 
     if (!project || project.userId !== req.user!.id) {
-      return res.status(404).json({ error: "Project not found or unauthorized" });
+      res.status(404).json({ error: "Project not found or unauthorized" });
     }
 
     await prisma.project.delete({
       where: { id: projectId },
     });
 
-    return res.json({ message: "Project deleted successfully" });
+    res.json({ message: "Project deleted successfully" });
   } catch (error) {
-    return res.status(400).json({ error: "Failed to delete project" });
+    res.status(400).json({ error: "Failed to delete project" });
   }
 };

@@ -58,8 +58,12 @@ function Projects({ data, isPublic }) {
       <div className="flex flex-col lg:flex-row space-y-6 lg:space-y-0 lg:space-x-6" key={id}>
         <div className=" w-96">
           <img
-            src={displayImage? displayImage : projectBlank }
-            alt="Profile"
+            src={displayImage}
+            alt="Project Demo"
+            onError={(e) => {
+              e.currentTarget.src = projectBlank
+            }}
+            style={{ maxWidth: '100%', height: 'auto' }}
             className="h-40 rounded-lg object-cover"
           />
         </div>

@@ -4,7 +4,7 @@ import { AuthenticatedRequest } from "../middlewares/authMiddleware";
 import { serializeEducation } from "../utils/serializers";
 
 // Get all educations of the current user
-export const getEducations = async (req: AuthenticatedRequest, res: Response) => {
+export const getEducations = async (req: AuthenticatedRequest, res: Response ): Promise<void> => {
   try {
     const educations = await prisma.education.findMany({
       where: {
@@ -12,14 +12,14 @@ export const getEducations = async (req: AuthenticatedRequest, res: Response) =>
       },
     });
 
-    return res.json(educations.map(serializeEducation));
+    res.json(educations.map(serializeEducation));
   } catch (error) {
-    return res.status(500).json({ error: "Failed to fetch educations" });
+    res.status(500).json({ error: "Failed to fetch educations" });
   }
 };
 
 // Create a new education for the current user
-export const createEducation = async (req: AuthenticatedRequest, res: Response) => {
+export const createEducation = async (req: AuthenticatedRequest, res: Response ): Promise<void> => {
   try {
     const educationData = req.body;
 
@@ -30,14 +30,14 @@ export const createEducation = async (req: AuthenticatedRequest, res: Response) 
       },
     });
 
-    return res.status(201).json(serializeEducation(newEducation));
+    res.status(201).json(serializeEducation(newEducation));
   } catch (error) {
-    return res.status(400).json({ error: "Failed to create education" });
+    res.status(400).json({ error: "Failed to create education" });
   }
 };
 
 // Update an education for the current user
-export const updateEducation = async (req: AuthenticatedRequest, res: Response) => {
+export const updateEducation = async (req: AuthenticatedRequest, res: Response ): Promise<void> => {
   try {
     const educationId = Number(req.params.id);
     const educationData = req.body;
@@ -47,7 +47,7 @@ export const updateEducation = async (req: AuthenticatedRequest, res: Response) 
     });
 
     if (!education || education.userId !== req.user!.id) {
-      return res.status(404).json({ error: "Education not found or unauthorized" });
+      res.status(404).json({ error: "Education not found or unauthorized" });
     }
 
     const updatedEducation = await prisma.education.update({
@@ -55,14 +55,14 @@ export const updateEducation = async (req: AuthenticatedRequest, res: Response) 
       data: educationData,
     });
 
-    return res.json({ message: "Education updated successfully", education: serializeEducation(updatedEducation) });
+    res.json({ message: "Education updated successfully", education: serializeEducation(updatedEducation) });
   } catch (error) {
-    return res.status(400).json({ error: "Failed to update education" });
+    res.status(400).json({ error: "Failed to update education" });
   }
 };
 
 // Delete an education for the current user
-export const deleteEducation = async (req: AuthenticatedRequest, res: Response) => {
+export const deleteEducation = async (req: AuthenticatedRequest, res: Response ): Promise<void> => {
   try {
     const educationId = Number(req.params.id);
 
@@ -71,15 +71,15 @@ export const deleteEducation = async (req: AuthenticatedRequest, res: Response) 
     });
 
     if (!education || education.userId !== req.user!.id) {
-      return res.status(404).json({ error: "Education not found or unauthorized" });
+      res.status(404).json({ error: "Education not found or unauthorized" });
     }
 
     await prisma.education.delete({
       where: { id: educationId },
     });
 
-    return res.json({ message: "Education deleted successfully" });
+    res.json({ message: "Education deleted successfully" });
   } catch (error) {
-    return res.status(400).json({ error: "Failed to delete education" });
+    res.status(400).json({ error: "Failed to delete education" });
   }
 };
