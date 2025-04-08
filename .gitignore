@@ -57,4 +57,4 @@ yarn.lock
 pnpm-lock.yaml
 /.vscode
 /devcanvas-api/public/storage
-/tmp/uploads
+devcanvas-api/tmp/uploads

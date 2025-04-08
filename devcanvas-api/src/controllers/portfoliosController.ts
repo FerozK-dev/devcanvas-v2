@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../db/prisma";
 import { serializePortfolio } from "../utils/serializers";
 
-export const showPublicPortfolio = async (req: Request, res: Response) => {
+export const showPublicPortfolio = async ( req: Request, res: Response ): Promise<void> => {
   try {
     const userId = parseInt(req.params.id);
     const user = await prisma.user.findUnique({
@@ -15,11 +15,12 @@ export const showPublicPortfolio = async (req: Request, res: Response) => {
     });
 
     if (!user || !user.publishPortfolio) {
-      return res.status(404).json({ error: "Portfolio not found or not published" });
+      res.status(404).json({ error: "Portfolio not found or not published" });
+      return;
     }
 
-    return res.json(serializePortfolio(user));
+    res.json(serializePortfolio(user));
   } catch (error) {
-    return res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: "Internal server error" });
   }
 };

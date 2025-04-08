@@ -8,6 +8,27 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
+const allowedMimeTypes: Record<string, RegExp> = {
+  profilePicture: /^image\/(jpeg|png|jpg|webp)$/,
+  resume: /^application\/pdf$/,
+  displayImage: /^image\/(jpeg|png|jpg|webp)$/,
+};
+
+const fileFilter: multer.Options['fileFilter'] = (req, file, cb) => {
+  const field = file.fieldname;
+
+  if (field in allowedMimeTypes) {
+    const regex = allowedMimeTypes[field];
+    if (regex.test(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error(`Invalid file type for ${field}`));
+    }
+  } else {
+    cb(new Error("Unexpected field"));
+  }
+};
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, uploadDir);
@@ -17,6 +38,9 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  fileFilter
+});
 
 export default upload;

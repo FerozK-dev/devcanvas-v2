@@ -6,7 +6,7 @@ import { User } from "../utils/types";
 declare global {
   namespace Express {
     interface Request {
-      user?: User;
+      user: User;
       file?: Express.Multer.File;
       files?: {
         [fieldname: string]: Express.Multer.File[];
@@ -16,7 +16,7 @@ declare global {
 }
 
 export interface AuthenticatedRequest extends Request {
-  user?: User;
+  user: User;
   file?: Express.Multer.File;
   files?: {
     [fieldname: string]: Express.Multer.File[];

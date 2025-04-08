@@ -27,6 +27,13 @@ class StorageService {
       folder,
       public_id: `${Date.now()}-${file.originalname}`,
     });
+
+    try {
+      await fs.promises.unlink(file.path);
+    } catch (err) {
+      console.error('Failed to delete temp file:', err);
+    }
+    
     return result.secure_url;
   }
 
@@ -36,7 +43,7 @@ class StorageService {
     const uploadDir = path.join(publicDir, 'storage', folder);
 
     if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true });
+      fs.mkdirSync(uploadDir, { recursive: true });
     }
 
     // Sanitize filename
@@ -46,9 +53,9 @@ class StorageService {
 
     // Write file
     if (file.buffer) {
-        await fs.promises.writeFile(filePath, file.buffer);
+      await fs.promises.writeFile(filePath, file.buffer);
     } else {
-        await fs.promises.rename(file.path, filePath);
+      await fs.promises.rename(file.path, filePath);
     }
 
     // Return URL-accessible path (without 'public' in path)

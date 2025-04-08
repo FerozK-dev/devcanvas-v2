@@ -1,6 +1,4 @@
-// @ts-nocheck
 import express from "express";
-import { RequestHandler } from "express";
 import { authenticateUser } from "../middlewares/authMiddleware";
 import {
   showProfile,
