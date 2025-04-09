@@ -1,15 +1,19 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import canvasApi from "../api";
 
-const fetchUser = createAsyncThunk("fetchUser/profileSlice", async () => {
+const fetchUser = createAsyncThunk("fetchUser/profileSlice", async (_, { rejectWithValue }) => {
   try {
-    const profile = await canvasApi.get("/api/v1/user/profile", {
+    const response = await canvasApi.get("/api/v1/user/profile", {
       headers: {
         auth_token: `${JSON.parse(localStorage.getItem("auth_token"))}`,
       },
     });
 
-    return profile.data;
+    if (response.status === 401 || response?.data?.error === "Invalid or expired token") {
+      return rejectWithValue(response?.data?.error);
+    }
+
+    return response.data;
   } catch (error) {}
 });
 
@@ -83,7 +87,9 @@ const profileSlice = createSlice({
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.profileData = action.payload;
       })
-      .addCase(fetchUser.rejected, (state, action) => {})
+      .addCase(fetchUser.rejected, (state, action) => {
+        localStorage.setItem("is_logged_in", false);
+      })
       .addCase(editUser.pending, (state) => {})
       .addCase(editUser.fulfilled, (state, action) => {
         state.profileData = action.payload;

@@ -59,6 +59,10 @@ function EditUserModal({ isOpen, onClose, profile, setProfileData }) {
       formData.append("profilePicture", profilePic);
     }
 
+    if (resume) {
+      formData.append("resume", resume);
+    }
+
     dispatch(editUser(formData))
       .unwrap()
       .then((originalPromiseResult) => {
@@ -210,7 +214,7 @@ function EditUserModal({ isOpen, onClose, profile, setProfileData }) {
             onChange={(e) => setProfilePic(e.target.files[0])}
             required={false}
           />
-          {/* <FormInput
+          <FormInput
             inputLabel="CV"
             labelFor="CV"
             inputType="file"
@@ -218,7 +222,8 @@ function EditUserModal({ isOpen, onClose, profile, setProfileData }) {
             inputName="CV"
             ariaLabelName="file"
             onChange={(e) => setResume(e.target.files[0])}
-          /> */}
+            required={false}
+          />
         </div>
         <Button title="Save"/>
       </form>

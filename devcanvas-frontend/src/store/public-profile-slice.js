@@ -16,7 +16,7 @@ const fetchPublicProfile = createAsyncThunk(
       if (response.status === 404) {
         return rejectWithValue("Portfolio not found");
       }
-      debugger
+
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 404) {

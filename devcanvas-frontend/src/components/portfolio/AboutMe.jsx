@@ -2,11 +2,15 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser, togglePublish } from "../../store/user-slice"
 import EditUserModal from "./EditUserModal"
+import ResumeModal from "./ResumeModal.jsx"
+import AiResumeModal from "./AiResumeModal"
 import toast, { Toaster } from "react-hot-toast";
 import blankProfile from"./../../images/profile-blank.png"
 
 function AboutMe({ data, isPublic }) {
   const [isModalOpen, setModalOpen] = useState(false);
+  const [resumeModalOpen, setResumeModalOpen] = useState(false);
+  const [aiModalOpen, setAiModalOpen] = useState(false);
   const dispatch = useDispatch();
   const [portfolioPublished, setPortfolioPublished] = useState(true);
 
@@ -28,6 +32,9 @@ function AboutMe({ data, isPublic }) {
         .then((result) => {
           setProfileData(result);
           setPortfolioPublished(result?.publishPortfolio)
+        })
+        .catch((rejectedValueOrSerializedError) => {
+          toast('Sessions has expired. Please login again.');
         });
     }
   }, [dispatch, isPublic, data, portfolioPublished]);
@@ -50,9 +57,23 @@ function AboutMe({ data, isPublic }) {
     <section className="py-8 md:py-10 bg-gray-100">
       <div className="container max-w-screen-xl mx-auto px-4">
 
-        {/* <div className="flex items-center justify-between mb-40">
-          <button className="px-7 py-5 mt-5 md:px-9 md:py-4 font-medium md:font-semibold bg-gray-700 text-gray-50 text-sm rounded-md hover:bg-gray-500 hover:text-gray-700 transition ease-linear duration-500">Get my CV</button>
-        </div> */}
+        <div className="flex justify-between items-center">
+          <button
+            onClick={() => setResumeModalOpen(true)}
+            className="px-7 py-5 mt-5 md:px-9 md:py-4 font-medium md:font-semibold bg-gray-700 text-gray-50
+            text-sm rounded-md hover:bg-gray-500 hover:text-gray-700 transition ease-linear duration-500"
+          >
+            Get My CV
+          </button>
+
+          {!isPublic && <button
+            onClick={() => setAiModalOpen(true)}
+            className="px-7 py-5 mt-5 md:px-9 md:py-4 font-medium md:font-semibold bg-gray-700 text-gray-50
+            text-sm rounded-md hover:bg-gray-500 hover:text-gray-700 transition ease-linear duration-500"
+          >
+            Generate CV
+          </button>}
+        </div>
 
         <div className="text-center">
           <div className="flex justify-center my-16">
@@ -112,9 +133,17 @@ function AboutMe({ data, isPublic }) {
                 profile={profileData}
                 setProfileData={setProfileData}
               />
+              <AiResumeModal
+                isOpen={aiModalOpen}
+                onClose={() => setAiModalOpen(false)}
+              />
             </div>
           )}
-
+          <ResumeModal
+            isOpen={resumeModalOpen}
+            onClose={() => setResumeModalOpen(false)}
+            resumeFile={profileData?.resume}
+          />
           {/* <a href="#" className="px-7 py-3 md:px-9 md:py-4 font-medium md:font-semibold bg-gray-700 text-gray-50 text-sm rounded-md hover:bg-gray-50 hover:text-gray-700 transition ease-linear duration-500">Hire me</a> */}
         </div>
       </div>
