@@ -7,9 +7,9 @@ const JWT_SECRET = process.env.JWT_SECRET || "your_secret_key";
 
 export const signup = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password, passwordConfirmation } = req.body;
 
-    if (!firstName || !lastName || !email || !password) {
+    if (!firstName || !lastName || !email || !password || !passwordConfirmation) {
       return res.status(400).json({ error: "All fields are required" });
     }
 
@@ -26,7 +26,9 @@ export const signup = async (req: Request, res: Response): Promise<Response> => 
       data: { firstName, lastName, email, password: hashedPassword },
     });
 
-    return res.status(201).json({ message: "User registered successfully", user });
+    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "23h" });
+
+    return res.status(201).json({ message: "User registered successfully", token });
   } catch (error) {
     return res.status(500).json({ error: "Internal Server Error" });
   }

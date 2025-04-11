@@ -31,23 +31,24 @@ const login = createAsyncThunk(
 const signup = createAsyncThunk(
   "auth/signup",
   async (
-    { email, password, first_name, last_name, password_confirmation },
+    { email, password, firstName, lastName, passwordConfirmation },
     { rejectWithValue }
   ) => {
     try {
-      const register = await canvasApi.post("/api/v1/session/signup", {
+      const register = await canvasApi.post("/api/v1/signup", {
         email,
         password,
-        first_name,
-        last_name,
-        password_confirmation,
+        firstName,
+        lastName,
+        passwordConfirmation,
       });
+
       if (304 <= register?.status) {
-        return rejectWithValue(register?.data?.message);
+        return rejectWithValue(register?.data?.error);
       }
       return register.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || "An error occurred");
+      return rejectWithValue(error?.response?.data || "An error occurred");
     }
   }
 );

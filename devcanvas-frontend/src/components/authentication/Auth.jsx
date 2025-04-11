@@ -21,6 +21,7 @@ const Auth = () => {
       .unwrap()
       .then((originalPromiseResult) => {
         navigate("/my-portfolio");
+        toast('Logged In.');
       })
       .catch((rejectedValueOrSerializedError) => {
         toast(rejectedValueOrSerializedError)
