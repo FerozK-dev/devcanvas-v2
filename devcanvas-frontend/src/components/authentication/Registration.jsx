@@ -24,9 +24,9 @@ function Registration() {
     const data = {
       email: email,
       password: password,
-      first_name: firstName,
-      last_name: lastName,
-      password_confirmation: passwordConf,
+      firstName: firstName,
+      lastName: lastName,
+      passwordConfirmation: passwordConf,
     };
     dispatch(signup(data))
       .unwrap()
