@@ -1,5 +1,6 @@
 # Running locally
-1. Add two `.env` files with variables.
+1. Download repo or clone `git clone git@github.com:FerozK-dev/devcanvas-v2.git` 
+2. Add two `.env` files with variables.
 First, `devcanvas-api/.env`
 ```
 # devcanvas-api/.env
@@ -26,10 +27,10 @@ DB_NAME=devcanvas-dev-db  # Can change if you want
 DATABASE_URL=postgres://postgres:12345678@localhost:5432/devcanvas-dev-db?schema=public&connection_limit=1  # Same as above
 ```
 
-2. Build and compose up
+3. Build and compose up
 ```
 docker compose build
 docker compose up
 ```
 
-3. The app is working at `http://localhost:3001`
+4. The app is working at `http://localhost:3001`
