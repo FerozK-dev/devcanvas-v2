@@ -58,3 +58,5 @@ pnpm-lock.yaml
 /.vscode
 /devcanvas-api/public/storage
 devcanvas-api/tmp/uploads
+devcanvas-ssh
+*.pub

@@ -1,0 +1,25 @@
+FROM node:18-alpine
+
+WORKDIR /usr/src/app
+
+# Install dependencies (including dev dependencies)
+COPY package*.json ./
+COPY prisma ./prisma
+RUN npm install && npm install --include=dev
+
+# Copy source code
+COPY . .
+
+# Generate Prisma client
+RUN npx prisma generate
+
+# Install nodemon globally
+RUN npm install -g nodemon
+
+EXPOSE 3000
+
+# Copy entrypoint script
+COPY entrypoint.dev.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]

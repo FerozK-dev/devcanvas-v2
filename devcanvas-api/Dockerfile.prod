@@ -1,0 +1,28 @@
+# Stage 1: Builder
+FROM node:18-alpine as builder
+ENV NODE_ENV=production
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+COPY prisma ./prisma
+RUN npm install --omit=dev
+
+COPY . .
+RUN npm run build
+RUN npx prisma generate
+
+# Stage 2: Runtime
+FROM node:18-alpine
+WORKDIR /usr/src/app
+
+COPY --from=builder /usr/src/app/node_modules ./node_modules
+COPY --from=builder /usr/src/app/package*.json ./
+COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/prisma ./prisma
+
+EXPOSE 3000
+
+COPY entrypoint.prod.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
