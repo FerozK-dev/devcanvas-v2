@@ -16,6 +16,12 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.postgres.rule=Host(`postgres.localhost`)"
+      - "traefik.http.routers.postgres.entrypoints=websecure"
+      - "traefik.http.routers.postgres.tls=true"
+      - "traefik.http.services.postgres.loadbalancer.server.port=5432"
     networks:
       - app-network
 
@@ -38,6 +44,12 @@ services:
     volumes:
       - ./devcanvas-api:/usr/src/app  # Mount source code
       - /usr/src/app/node_modules     # Keep node_modules isolated
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`backend.localhost`)" # This is the node-app service URL
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls=true"
+      - "traefik.http.services.backend.loadbalancer.server.port=3000"
 
   frontend:
     build:
@@ -53,11 +65,48 @@ services:
       - WDS_SOCKET_PORT=3001       # Webpack Dev Server socket port
     stdin_open: true               # Required for React
     tty: true                      # Required for React
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`frontend.localhost`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls=true"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3001"
+    networks:
+      - app-network
 
   # python-service:
   #   build: ./python-microservice
+      # labels:
+      # - "traefik.enable=true"
+      # - "traefik.http.routers.python-service.rule=Host(`python-service.localhost`)"
+      # - "traefik.http.routers.python-service.entrypoints=websecure"
+      # - "traefik.http.routers.python-service.tls=true"
+      # - "traefik.http.routers.python-service.loadbalancer.server.port=# ADD PORT"
   #   networks:
   #     - app-network
+
+  traefik:
+    image: traefik:v3.3.3
+    command:
+      - "--configFile=/app/configs/traefik.toml"
+    volumes:
+      - ./traefik/traefik.toml:/app/configs/traefik.toml:ro
+      - ./traefik/dynamic_conf.toml:/app/configs/dynamic_conf.toml:ro
+      - ./traefik/certs:/certs:ro
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.routers.traefik.service=api@internal"
+    environment:
+      - TZ=Europe/Helsinki
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
