@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:15
@@ -18,10 +16,11 @@ services:
       dockerfile: Dockerfile.dev
     environment:
       - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}?schema=public
+      - NODE_ENV=development
     ports:
       - "3000:3000"
     volumes:
-      - ./devcanvas-api:/usr/src/app
+      - ${PWD}/devcanvas-api:/usr/src/app
       - /usr/src/app/node_modules
     depends_on:
       - postgres
@@ -33,7 +32,7 @@ services:
     ports:
       - "3001:3001"
     volumes:
-      - ./devcanvas-frontend:/app
+      - ${PWD}/devcanvas-frontend:/app
       - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
