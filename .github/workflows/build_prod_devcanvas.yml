@@ -1,18 +1,19 @@
-name: Production Deployment
+name: Production Deployment CI/CD
 
 on:
   push:
     branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 env:
   REGISTRY: ghcr.io
-  BACKEND_IMAGE: ${{ github.repository_owner }}/devcanvas-api
-  FRONTEND_IMAGE: ${{ github.repository_owner }}/devcanvas-frontend
+  BACKEND_IMAGE: ${{ github.repository_owner | lower }}/devcanvas_v2-devcanvas-api
+  FRONTEND_IMAGE: ${{ github.repository_owner | lower }}/devcanvas_v2-devcanvas-frontend
   TAG: ${{ github.sha }}
-  GHCR_OWNER: ${{ github.repository_owner }}
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -36,7 +37,7 @@ jobs:
         tags: |
           ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE }}:${{ env.TAG }}
           ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE }}:latest
-        push: true
+        push: ${{ github.event_name == 'push' }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
@@ -48,13 +49,17 @@ jobs:
         tags: |
           ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:${{ env.TAG }}
           ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:latest
-        push: true
+        push: ${{ github.event_name == 'push' }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-    - name: Create env file
-      run: |
-        echo "GHCR_OWNER=${{ github.repository_owner }}" >> .env
-        echo "TAG=${{ github.sha }}" >> .env
+
+  deploy:
+    needs: build
+    if: github.event_name == 'push'  # Only deploy on direct pushes to master
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
 
     - name: Deploy to DigitalOcean
       uses: appleboy/ssh-action@v0.1.10
@@ -63,9 +68,14 @@ jobs:
         username: ${{ secrets.DO_USERNAME }}
         key: ${{ secrets.DO_SSH_KEY }}
         script: |
-          # Pull latest images
-          docker pull ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE }}:${{ env.TAG }}
-          docker pull ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:${{ env.TAG }}
+          set -e  # Exit immediately on error
+
+          # Pull latest images with retry
+          docker pull ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE }}:${{ env.TAG }} || \
+            (sleep 30 && docker pull ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE }}:${{ env.TAG }})
+
+          docker pull ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:${{ env.TAG }} || \
+            (sleep 30 && docker pull ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:${{ env.TAG }})
 
           # Create environment file
           cat << EOF > .env
@@ -75,14 +85,14 @@ jobs:
           CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}
           CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}
           CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
-          CLOUDINARY_URL=cloudinary://${{ secrets.CLOUDINARY_API_KEY }}:${{ secrets.CLOUDINARY_API_SECRET }}@${{ secrets.CLOUDINARY_CLOUD_NAME }}
           TAG=${{ env.TAG }}
+          GHCR_OWNER=${{ github.repository_owner | lower }}
           EOF
 
-          # Update containers
-          docker-compose -f docker-compose.prod.yml down
-          docker-compose -f docker-compose.prod.yml up -d
+          # Update containers with zero-downtime approach
+          docker-compose -f docker-compose.prod.yml up -d --scale backend=2 --no-recreate
+          sleep 30  # Wait for new containers to initialize
+          docker-compose -f docker-compose.prod.yml stop backend=1
 
-          # Cleanup
-          docker system prune -af
-          docker volume prune -f
+          # Cleanup old containers and images
+          docker system prune -af --volumes
