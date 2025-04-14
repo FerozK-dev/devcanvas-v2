@@ -1,11 +1,10 @@
 # Stage 1: Builder
 FROM node:18-alpine as builder
-ENV NODE_ENV=production
 WORKDIR /usr/src/app
 
 COPY package*.json ./
 COPY prisma ./prisma
-RUN npm install --omit=dev
+RUN npm install
 
 COPY . .
 RUN npm run build
@@ -13,6 +12,7 @@ RUN npx prisma generate
 
 # Stage 2: Runtime
 FROM node:18-alpine
+ENV NODE_ENV=production
 WORKDIR /usr/src/app
 
 COPY --from=builder /usr/src/app/node_modules ./node_modules
