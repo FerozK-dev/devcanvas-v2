@@ -8,7 +8,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  REGISTRY: ghcr.io
   BACKEND_IMAGE: ${{ format('{0}/{1}', toLower(github.repository_owner), 'devcanvas_v2-devcanvas-api') }}
   FRONTEND_IMAGE: ${{ format('{0}/{1}', toLower(github.repository_owner), 'devcanvas_v2-devcanvas-frontend') }}
   TAG: ${{ github.sha }}
