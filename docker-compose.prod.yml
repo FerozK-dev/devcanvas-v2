@@ -16,7 +16,7 @@ services:
       - app-network
 
   backend:
-    image: ghcr.io/ferozk-dev/devcanvas_v2-devcanvas-api:${TAG}
+    image: ghcr.io/${{ env.LOWERCASE_OWNER }}/devcanvas_v2-devcanvas-api:${TAG}
     # build:
     #   context: ./devcanvas-api
     #   dockerfile: Dockerfile.prod
@@ -34,9 +34,15 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
 
   frontend:
-    image: ghcr.io/ferozk-dev/devcanvas_v2-devcanvas-frontend:${TAG}
+    image: ghcr.io/${{ env.LOWERCASE_OWNER }}/devcanvas_v2-devcanvas-frontend:${TAG}
     # build:
     #   context: ./devcanvas-frontend
     #   dockerfile: Dockerfile.prod

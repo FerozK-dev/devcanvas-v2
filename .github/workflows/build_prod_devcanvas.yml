@@ -8,8 +8,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  BACKEND_IMAGE: ${{ github.repository_owner | lower }}/devcanvas_v2-devcanvas-api
-  FRONTEND_IMAGE: ${{ github.repository_owner | lower }}/devcanvas_v2-devcanvas-frontend
+  REPO_OWNER: ${{ github.repository_owner }}
   TAG: ${{ github.sha }}
 
 jobs:
@@ -18,6 +17,20 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+
+    - name: Convert owner to lowercase
+      shell: bash
+      run: |
+        LOWERCASE_OWNER=$(echo "${{ env.REPO_OWNER }}" | tr '[:upper:]' '[:lower:]')
+        echo "LOWERCASE_OWNER=$LOWERCASE_OWNER" >> $GITHUB_ENV
+        echo "POSTGRES_VERSION=15" >> $GITHUB_ENV
+        echo "NODE_ENV=production" >> $GITHUB_ENV
+
+    - name: Set image names
+      shell: bash
+      run: |
+        echo "BACKEND_IMAGE=${{ env.LOWERCASE_OWNER }}/devcanvas_v2-devcanvas-api" >> $GITHUB_ENV
+        echo "FRONTEND_IMAGE=${{ env.LOWERCASE_OWNER }}/devcanvas_v2-devcanvas-frontend" >> $GITHUB_ENV
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
@@ -55,7 +68,7 @@ jobs:
 
   deploy:
     needs: build
-    if: github.event_name == 'push'  # Only deploy on direct pushes to master
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -68,14 +81,11 @@ jobs:
         username: ${{ secrets.DO_USERNAME }}
         key: ${{ secrets.DO_SSH_KEY }}
         script: |
-          set -e  # Exit immediately on error
+          set -e
 
-          # Pull latest images with retry
-          docker pull ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE }}:${{ env.TAG }} || \
-            (sleep 30 && docker pull ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE }}:${{ env.TAG }})
-
-          docker pull ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:${{ env.TAG }} || \
-            (sleep 30 && docker pull ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:${{ env.TAG }})
+          # Create deployment directory
+          mkdir -p ~/deployments/devcanvas
+          cd ~/deployments/devcanvas
 
           # Create environment file
           cat << EOF > .env
@@ -85,14 +95,34 @@ jobs:
           CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}
           CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}
           CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
+          GHCR_OWNER=${{ env.LOWERCASE_OWNER }}
           TAG=${{ env.TAG }}
-          GHCR_OWNER=${{ github.repository_owner | lower }}
+          POSTGRES_VERSION=15
+          NODE_ENV=production
           EOF
 
-          # Update containers with zero-downtime approach
-          docker-compose -f docker-compose.prod.yml up -d --scale backend=2 --no-recreate
-          sleep 30  # Wait for new containers to initialize
-          docker-compose -f docker-compose.prod.yml stop backend=1
+          # Copy compose file if not exists
+          if [ ! -f docker-compose.prod.yml ]; then
+            cp $GITHUB_WORKSPACE/docker-compose.prod.yml .
+          fi
 
-          # Cleanup old containers and images
-          docker system prune -af --volumes
+          # Pull images with retry
+          docker pull ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE }}:${{ env.TAG }} || \
+            (sleep 30 && docker pull ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE }}:${{ env.TAG }})
+
+          docker pull ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:${{ env.TAG }} || \
+            (sleep 30 && docker pull ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:${{ env.TAG }})
+
+          # Deploy with zero-downtime
+          export COMPOSE_PROJECT_NAME=devcanvas_prod
+          docker-compose -f docker-compose.prod.yml down --remove-orphans
+          docker-compose -f docker-compose.prod.yml up -d --build
+
+          # Verify deployment
+          until docker-compose -f docker-compose.prod.yml exec -T backend curl --fail http://localhost:3000/health; do
+            echo "Waiting for backend to be healthy..."
+            sleep 10
+          done
+
+          # Cleanup
+          docker system prune -af --filter "label!=com.docker.compose.project=devcanvas_prod"
