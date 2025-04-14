@@ -8,8 +8,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  BACKEND_IMAGE: ${{ github.repository_owner | lower }}/devcanvas_v2-devcanvas-api
-  FRONTEND_IMAGE: ${{ github.repository_owner | lower }}/devcanvas_v2-devcanvas-frontend
+  BACKEND_IMAGE: ${{ format('{0}/{1}', github.repository_owner, 'devcanvas_v2-devcanvas-api') }}
+  FRONTEND_IMAGE: ${{ format('{0}/{1}', github.repository_owner, 'devcanvas_v2-devcanvas-frontend') }}
   TAG: ${{ github.sha }}
 
 jobs:
