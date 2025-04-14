@@ -16,13 +16,19 @@ services:
       - app-network
 
   backend:
-    image: devcanvas-api:prod
+    image: ghcr.io/${GHCR_OWNER}/devcanvas-api:${TAG}
     build:
       context: ./devcanvas-api
       dockerfile: Dockerfile.prod
     environment:
-      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}?schema=public
-      NODE_ENV: production
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - STORAGE_TYPE=${STORAGE_TYPE}
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+      - CLOUDINARY_URL=${CLOUDINARY_URL}
+      - NODE_ENV: production
     networks:
       - app-network
     depends_on:
@@ -30,7 +36,7 @@ services:
         condition: service_healthy
 
   frontend:
-    image: devcanvas-frontend:prod
+    image: ghcr.io/${GHCR_OWNER}/devcanvas-frontend:${TAG}
     build:
       context: ./devcanvas-frontend
       dockerfile: Dockerfile.prod

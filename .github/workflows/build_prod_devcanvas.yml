@@ -1,0 +1,84 @@
+name: Production Deployment
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  REGISTRY: ghcr.io
+  BACKEND_IMAGE: ${{ github.repository_owner }}/devcanvas-api
+  FRONTEND_IMAGE: ${{ github.repository_owner }}/devcanvas-frontend
+  TAG: ${{ github.sha }}
+  GHCR_OWNER: ${{ github.repository_owner }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and push backend
+      uses: docker/build-push-action@v3
+      with:
+        context: ./devcanvas-api
+        file: ./devcanvas-api/Dockerfile.prod
+        tags: |
+          ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE }}:${{ env.TAG }}
+          ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE }}:latest
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Build and push frontend
+      uses: docker/build-push-action@v3
+      with:
+        context: ./devcanvas-frontend
+        file: ./devcanvas-frontend/Dockerfile.prod
+        tags: |
+          ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:${{ env.TAG }}
+          ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:latest
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Deploy to DigitalOcean
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.DO_HOST }}
+        username: ${{ secrets.DO_USERNAME }}
+        key: ${{ secrets.DO_SSH_KEY }}
+        script: |
+          # Pull latest images
+          docker pull ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE }}:${{ env.TAG }}
+          docker pull ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:${{ env.TAG }}
+
+          # Create environment file
+          cat << EOF > .env
+          DATABASE_URL=postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@postgres:5432/${{ secrets.DB_NAME }}?schema=public
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          STORAGE_TYPE=cloud
+          CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
+          CLOUDINARY_URL=cloudinary://${{ secrets.CLOUDINARY_API_KEY }}:${{ secrets.CLOUDINARY_API_SECRET }}@${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          TAG=${{ env.TAG }}
+          EOF
+
+          # Update containers
+          docker-compose -f docker-compose.prod.yml down
+          docker-compose -f docker-compose.prod.yml up -d
+
+          # Cleanup
+          docker system prune -af
+          docker volume prune -f
