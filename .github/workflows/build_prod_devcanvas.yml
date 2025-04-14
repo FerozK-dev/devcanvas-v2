@@ -8,8 +8,9 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  BACKEND_IMAGE: ${{ format('{0}/{1}', github.repository_owner, 'devcanvas_v2-devcanvas-api') }}
-  FRONTEND_IMAGE: ${{ format('{0}/{1}', github.repository_owner, 'devcanvas_v2-devcanvas-frontend') }}
+  REGISTRY: ghcr.io
+  BACKEND_IMAGE: ${{ format('{0}/{1}', toLower(github.repository_owner), 'devcanvas_v2-devcanvas-api') }}
+  FRONTEND_IMAGE: ${{ format('{0}/{1}', toLower(github.repository_owner), 'devcanvas_v2-devcanvas-frontend') }}
   TAG: ${{ github.sha }}
 
 jobs:
@@ -85,8 +86,8 @@ jobs:
           CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}
           CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}
           CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
+          GHCR_OWNER=ferozk-dev
           TAG=${{ env.TAG }}
-          GHCR_OWNER=${{ github.repository_owner}}
           EOF
 
           # Update containers with zero-downtime approach
