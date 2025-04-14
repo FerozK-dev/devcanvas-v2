@@ -2,7 +2,7 @@ name: Production Deployment
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
 env:
   REGISTRY: ghcr.io
@@ -51,6 +51,10 @@ jobs:
         push: true
         cache-from: type=gha
         cache-to: type=gha,mode=max
+    - name: Create env file
+      run: |
+        echo "GHCR_OWNER=${{ github.repository_owner }}" >> .env
+        echo "TAG=${{ github.sha }}" >> .env
 
     - name: Deploy to DigitalOcean
       uses: appleboy/ssh-action@v0.1.10

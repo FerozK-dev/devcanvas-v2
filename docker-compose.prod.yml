@@ -17,9 +17,9 @@ services:
 
   backend:
     image: ghcr.io/${GHCR_OWNER}/devcanvas-api:${TAG}
-    build:
-      context: ./devcanvas-api
-      dockerfile: Dockerfile.prod
+    # build:
+    #   context: ./devcanvas-api
+    #   dockerfile: Dockerfile.prod
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - JWT_SECRET=${JWT_SECRET}
@@ -37,9 +37,9 @@ services:
 
   frontend:
     image: ghcr.io/${GHCR_OWNER}/devcanvas-frontend:${TAG}
-    build:
-      context: ./devcanvas-frontend
-      dockerfile: Dockerfile.prod
+    # build:
+    #   context: ./devcanvas-frontend
+    #   dockerfile: Dockerfile.prod
     ports:
       - "80:80"
       - "443:443"
