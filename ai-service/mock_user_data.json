@@ -1,0 +1,54 @@
+{
+    "personal_info": {
+        "name": "Amiya ",
+        "email": "amiya@ri.ark",
+        "phone": "0441112222",
+        "location": "Terra"
+    },
+    "education": [
+        {
+        "degree": "Bsc. Computer Science",
+        "school": "Havard University",
+        "year": "2015"
+        }
+    ],
+    "experience": [
+        {
+        "title": "Senior Software Engineer",
+        "company": "Rohdes Island",
+        "duration": "2019-2025",
+        "responsibilities": [
+            "Did some coding in JavaScript and React.", 
+            "Fixed bugs in the app.",
+            "Used Node.js for backend stuff.",
+            "Helped the team with projects.",
+            "Talked to PMs sometimes."
+        ]
+        },
+        {
+        "title": "Software Engineer",
+        "company": "Lungmen",
+        "duration": "2015-2019",
+        "responsibilities": [
+            "Worked on frontend and backend.",
+            "Made APIs with Express.",
+            "Used MongoDB for the database.",
+            "Did testing sometimes.",
+            "Went to meetings."
+            ]
+        }
+    ],
+    "projects": [
+        {
+        "title": "TaskFlow",
+        "description": "A Trello-like task management tool with real-time updates, drag-and-drop functionality, and team collaboration features. Built to solve inefficiencies in remote team coordination.",
+        "technologies": ["React", "Redux", "Tailwind", "Node", "Express", "PostgreSQL"]
+        },
+        {
+        "title": "DevLog",
+        "description": "A minimalist blogging platform for developers, featuring syntax-highlighted code snippets, dark/light mode, and GitHub-flavored Markdown support.",
+        "technologies": ["React", "Redux", "Tailwind", "Node", "Express", "PostgreSQL"]
+        }
+    ],
+    "skills": ["React", "Node", "Javascript", "Typescript", "AWS", "MongoDB", "Express", "Jest"]
+}
