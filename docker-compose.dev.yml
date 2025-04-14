@@ -1,4 +1,27 @@
 services:
+  traefik:
+    image: traefik:v3.3.3
+    command:
+      - "--configFile=/app/configs/traefik.toml"
+    volumes:
+      - ./traefik/traefik.toml:/app/configs/traefik.toml:ro
+      - ./traefik/dynamic_conf.toml:/app/configs/dynamic_conf.toml:ro
+      - ./traefik/certs:/certs:ro
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.routers.traefik.service=api@internal"
+    environment:
+      - TZ=Europe/Helsinki
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - app-network
+
   postgres:
     image: postgres:15
     environment:
@@ -9,6 +32,14 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.postgres.rule=Host(`postgres.localhost`)"
+      - "traefik.http.routers.postgres.entrypoints=websecure"
+      - "traefik.http.routers.postgres.tls=true"
+      - "traefik.http.services.postgres.loadbalancer.server.port=5432"
+    networks:
+      - app-network
 
   backend:
     build:
@@ -24,6 +55,14 @@ services:
       - /usr/src/app/node_modules
     depends_on:
       - postgres
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`backend.localhost`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls=true"
+      - "traefik.http.services.backend.loadbalancer.server.port=3000"
+    networks:
+      - app-network
 
   frontend:
     build:
@@ -37,6 +76,18 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
       - REACT_APP_API_URL=http://localhost:3000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`frontend.localhost`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls=true"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3001"
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
