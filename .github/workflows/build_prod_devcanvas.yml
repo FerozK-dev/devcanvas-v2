@@ -86,7 +86,7 @@ jobs:
           CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}
           CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
           TAG=${{ env.TAG }}
-          GHCR_OWNER=${{ github.repository_owner | lower }}
+          GHCR_OWNER=${{ github.repository_owner}}
           EOF
 
           # Update containers with zero-downtime approach
