@@ -27,10 +27,16 @@ DB_NAME=devcanvas-dev-db  # Can change if you want
 DATABASE_URL=postgres://postgres:12345678@localhost:5432/devcanvas-dev-db?schema=public&connection_limit=1  # Same as above
 ```
 
-3. Build and compose up
+3. Generate trusted certificates and move them to traefik/certs folder, following [Japskua/cloud_services_and_infra_2025](https://github.com/Japskua/cloud_services_and_infra_2025/blob/main/certificates.md).
+You will need the following:
 ```
-docker compose build
-docker compose up
+mkcert "*.localhost" traefik.localhost frontend.localhost backend.localhost postgres.localhost
 ```
 
-4. The app is working at `http://localhost:3001`
+3. Build and compose up
+```
+docker compose -f docker-compose.dev.yml build
+docker compose -f docker-compose.dev.yml up
+```
+
+4. The app is available at `https://frontend.localhost/`
