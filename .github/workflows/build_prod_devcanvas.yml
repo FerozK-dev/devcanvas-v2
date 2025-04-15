@@ -5,14 +5,35 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  workflow_dispatch:  # Add this for manual triggering
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+      ref:
+        description: 'Branch, tag, or SHA to deploy'
+        required: true
+        default: 'master'
+      skip_build:
+        description: 'Skip build step?'
+        required: false
+        default: 'false'
+        type: boolean
 
 env:
   REGISTRY: ghcr.io
   REPO_OWNER: ${{ github.repository_owner }}
-  TAG: ${{ github.sha }}
+  TAG: ${{ github.sha || inputs.ref }}
 
 jobs:
   build:
+    # Add condition to skip build if requested
+    if: ${{ !inputs.skip_build || github.event_name != 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -80,6 +101,10 @@ jobs:
         cache-to: type=gha,mode=max
 
   deploy:
+    needs: build
+    if: |
+      github.event_name == 'push' ||
+      (github.event_name == 'workflow_dispatch' && inputs.environment == 'production')
     needs: build
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
