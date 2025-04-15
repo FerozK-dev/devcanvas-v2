@@ -141,6 +141,12 @@ jobs:
           mkdir -p ~/deployments/devcanvas
           cd ~/deployments/devcanvas
 
+          # Get compose file
+          docker run -d --name config-container ghcr.io/${{ needs.build.outputs.lowercase_owner }}/devcanvas-config:latest
+          docker cp config-container:/docker-compose.prod.yml .
+          docker stop config-container
+          docker rm config-container
+
           cat << EOF > .env
           DATABASE_URL=postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@postgres:5432/${{ secrets.DB_NAME }}?schema=public
           JWT_SECRET=${{ secrets.JWT_SECRET }}
@@ -160,7 +166,7 @@ jobs:
           docker cp config-container:/docker-compose.prod.yml .
           docker rm config-container
 
-          # Pull images with proper references
+          # Pull application images
           docker pull ${{ env.REGISTRY }}/${{ needs.build.outputs.backend_image }}:${{ env.TAG }} || \
             (sleep 30 && docker pull ${{ env.REGISTRY }}/${{ needs.build.outputs.backend_image }}:${{ env.TAG }})
 
@@ -174,4 +180,6 @@ jobs:
           export COMPOSE_PROJECT_NAME=devcanvas_prod
           docker-compose -f docker-compose.prod.yml down --remove-orphans
           docker-compose -f docker-compose.prod.yml up -d --build
+
+          # Cleanup
           docker system prune -af --filter "label!=com.docker.compose.project=devcanvas_prod"
