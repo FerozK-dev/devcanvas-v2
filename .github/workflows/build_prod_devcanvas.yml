@@ -134,6 +134,10 @@ jobs:
         key: ${{ secrets.DO_SSH_KEY }}
         script: |
           set -e
+
+          # Authenticate with GHCR
+          echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+
           mkdir -p ~/deployments/devcanvas
           cd ~/deployments/devcanvas
 
@@ -151,7 +155,6 @@ jobs:
           NODE_ENV=production
           EOF
 
-          # Pull compose config
           docker pull ghcr.io/${{ needs.build.outputs.lowercase_owner }}/devcanvas-config:latest
           docker create --name config-container ghcr.io/${{ needs.build.outputs.lowercase_owner }}/devcanvas-config:latest
           docker cp config-container:/docker-compose.prod.yml .
