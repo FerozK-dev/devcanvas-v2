@@ -1,14 +1,12 @@
 # Stage 1: Build
 FROM node:20-alpine as builder
-
 WORKDIR /app
 COPY package*.json ./
 RUN npm install --omit=dev
 COPY . .
 RUN npm run build
 
-# Export build artifacts to named volume
-VOLUME /app/build
-
-# Optional: Add a metadata label to identify build output
-LABEL com.devcanvas.artifact-type="frontend-build"
+# Stage 2: Artifact Export
+FROM alpine:latest
+WORKDIR /app
+COPY --from=builder /app/build ./build
