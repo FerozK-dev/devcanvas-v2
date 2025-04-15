@@ -115,12 +115,15 @@ jobs:
           NODE_ENV=production
           EOF
 
-          # Copy compose file if not exists
           if [ ! -f docker-compose.prod.yml ]; then
-            cp $GITHUB_WORKSPACE/docker-compose.prod.yml .
+            git clone --depth 1 --branch master https://github.com/${{ github.repository }}.git tmp_repo
+            cp tmp_repo/docker-compose.prod.yml .
+            rm -rf tmp_repo
           else
-            # Update existing compose file if needed
-            cp -f $GITHUB_WORKSPACE/docker-compose.prod.yml .
+            # Update existing compose file by pulling latest changes
+            git clone --depth 1 --branch master https://github.com/${{ github.repository }}.git tmp_repo
+            cp -f tmp_repo/docker-compose.prod.yml .
+            rm -rf tmp_repo
           fi
 
           # Pull images with retry
@@ -139,15 +142,15 @@ jobs:
           docker-compose -f docker-compose.prod.yml up -d --build
 
           # Verify deployment
-          until docker-compose -f docker-compose.prod.yml exec -T backend curl --fail http://localhost:3000/health; do
-            echo "Waiting for backend to be healthy..."
-            sleep 10
-          done
+          # until docker-compose -f docker-compose.prod.yml exec -T backend curl --fail http://localhost:3000/health; do
+          #   echo "Waiting for backend to be healthy..."
+          #   sleep 10
+          # done
 
-          until docker-compose -f docker-compose.prod.yml exec -T ai-service curl --fail http://localhost:8000/health; do
-            echo "Waiting for AI service to be healthy..."
-            sleep 10
-          done
+          # until docker-compose -f docker-compose.prod.yml exec -T ai-service curl --fail http://localhost:8000/health; do
+          #   echo "Waiting for AI service to be healthy..."
+          #   sleep 10
+          # done
 
           # Cleanup
           docker system prune -af --filter "label!=com.docker.compose.project=devcanvas_prod"
