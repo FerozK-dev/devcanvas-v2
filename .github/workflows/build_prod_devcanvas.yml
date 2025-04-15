@@ -115,16 +115,10 @@ jobs:
           NODE_ENV=production
           EOF
 
-          if [ ! -f docker-compose.prod.yml ]; then
-            git clone --depth 1 --branch master https://github.com/${{ github.repository }}.git tmp_repo
-            cp tmp_repo/docker-compose.prod.yml .
-            rm -rf tmp_repo
-          else
-            # Update existing compose file by pulling latest changes
-            git clone --depth 1 --branch master https://github.com/${{ github.repository }}.git tmp_repo
-            cp -f tmp_repo/docker-compose.prod.yml .
-            rm -rf tmp_repo
-          fi
+          docker pull ghcr.io/${{ env.LOWERCASE_OWNER }}/devcanvas-config:latest
+          docker create --name config-container ghcr.io/${{ env.LOWERCASE_OWNER }}/devcanvas-config:latest
+          docker cp config-container:/docker-compose.prod.yml .
+          docker rm config-container
 
           # Pull images with retry
           docker pull ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE }}:${{ env.TAG }} || \
