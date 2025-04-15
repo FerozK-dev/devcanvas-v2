@@ -38,19 +38,17 @@ jobs:
 
       - name: Upload compose file as config
         run: |
-          # Verify file exists
-          ls -la docker-compose.prod.yml || exit 1
-
           # Create temporary Dockerfile
           cat <<EOF > Dockerfile.temp
-          FROM scratch
+          FROM alpine:latest
           COPY docker-compose.prod.yml /docker-compose.prod.yml
+          # Add a dummy command to satisfy Docker
+          CMD ["sh", "-c", "echo 'Config image ready' && tail -f /dev/null"]
           EOF
 
           # Build and push config image
           docker buildx build \
             -f Dockerfile.temp \
             -t ghcr.io/${{ env.LOWERCASE_OWNER }}/devcanvas-config:latest \
-            -t ghcr.io/${{ env.LOWERCASE_OWNER }}/devcanvas-config:${{ github.sha }} \
             --push \
             --platform linux/amd64 .
