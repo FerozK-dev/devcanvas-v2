@@ -35,6 +35,11 @@ jobs:
     # Add condition to skip build if requested
     if: ${{ !inputs.skip_build || github.event_name != 'workflow_dispatch' }}
     runs-on: ubuntu-latest
+    outputs:
+      lowercase_owner: ${{ steps.set_vars.outputs.lowercase_owner }}
+      backend_image: ${{ steps.set_vars.outputs.backend_image }}
+      frontend_image: ${{ steps.set_vars.outputs.frontend_image }}
+      ai_service_image: ${{ steps.set_vars.outputs.ai_service_image }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -46,6 +51,17 @@ jobs:
         echo "LOWERCASE_OWNER=$LOWERCASE_OWNER" >> $GITHUB_ENV
         echo "POSTGRES_VERSION=15" >> $GITHUB_ENV
         echo "NODE_ENV=production" >> $GITHUB_ENV
+
+    - name: Set variables
+      id: set_vars
+      shell: bash
+      run: |
+        LOWERCASE_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+        echo "lowercase_owner=$LOWERCASE_OWNER" >> $GITHUB_OUTPUT
+        echo "backend_image=$LOWERCASE_OWNER/devcanvas_v2-devcanvas-api" >> $GITHUB_OUTPUT
+        echo "frontend_image=$LOWERCASE_OWNER/devcanvas_v2-devcanvas-frontend" >> $GITHUB_OUTPUT
+        echo "ai_service_image=$LOWERCASE_OWNER/devcanvas_v2-ai-service" >> $GITHUB_OUTPUT
+        echo "LOWERCASE_OWNER=$LOWERCASE_OWNER" >> $GITHUB_ENV
 
     - name: Set image names
       shell: bash
@@ -118,12 +134,9 @@ jobs:
         key: ${{ secrets.DO_SSH_KEY }}
         script: |
           set -e
-
-          # Create deployment directory
           mkdir -p ~/deployments/devcanvas
           cd ~/deployments/devcanvas
 
-          # Create environment file
           cat << EOF > .env
           DATABASE_URL=postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@postgres:5432/${{ secrets.DB_NAME }}?schema=public
           JWT_SECRET=${{ secrets.JWT_SECRET }}
@@ -132,42 +145,30 @@ jobs:
           CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}
           CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
           AI_SERVICE_URL=http://ai-service:8000
-          GHCR_OWNER=${{ env.LOWERCASE_OWNER }}
+          GHCR_OWNER=${{ needs.build.outputs.lowercase_owner }}
           TAG=${{ env.TAG }}
           POSTGRES_VERSION=15
           NODE_ENV=production
           EOF
 
-          docker pull ghcr.io/${{ env.LOWERCASE_OWNER }}/devcanvas-config:latest
-          docker create --name config-container ghcr.io/${{ env.LOWERCASE_OWNER }}/devcanvas-config:latest
+          # Pull compose config
+          docker pull ghcr.io/${{ needs.build.outputs.lowercase_owner }}/devcanvas-config:latest
+          docker create --name config-container ghcr.io/${{ needs.build.outputs.lowercase_owner }}/devcanvas-config:latest
           docker cp config-container:/docker-compose.prod.yml .
           docker rm config-container
 
-          # Pull images with retry
-          docker pull ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE }}:${{ env.TAG }} || \
-            (sleep 30 && docker pull ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE }}:${{ env.TAG }})
+          # Pull images with proper references
+          docker pull ${{ env.REGISTRY }}/${{ needs.build.outputs.backend_image }}:${{ env.TAG }} || \
+            (sleep 30 && docker pull ${{ env.REGISTRY }}/${{ needs.build.outputs.backend_image }}:${{ env.TAG }})
 
-          docker pull ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:${{ env.TAG }} || \
-            (sleep 30 && docker pull ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:${{ env.TAG }})
+          docker pull ${{ env.REGISTRY }}/${{ needs.build.outputs.frontend_image }}:${{ env.TAG }} || \
+            (sleep 30 && docker pull ${{ env.REGISTRY }}/${{ needs.build.outputs.frontend_image }}:${{ env.TAG }})
 
-          docker pull ${{ env.REGISTRY }}/${{ env.AI_SERVICE_IMAGE }}:${{ env.TAG }} || \
-            (sleep 30 && docker pull ${{ env.REGISTRY }}/${{ env.AI_SERVICE_IMAGE }}:${{ env.TAG }})
+          docker pull ${{ env.REGISTRY }}/${{ needs.build.outputs.ai_service_image }}:${{ env.TAG }} || \
+            (sleep 30 && docker pull ${{ env.REGISTRY }}/${{ needs.build.outputs.ai_service_image }}:${{ env.TAG }})
 
-          # Deploy with zero-downtime
+          # Deploy
           export COMPOSE_PROJECT_NAME=devcanvas_prod
           docker-compose -f docker-compose.prod.yml down --remove-orphans
           docker-compose -f docker-compose.prod.yml up -d --build
-
-          # Verify deployment
-          # until docker-compose -f docker-compose.prod.yml exec -T backend curl --fail http://localhost:3000/health; do
-          #   echo "Waiting for backend to be healthy..."
-          #   sleep 10
-          # done
-
-          # until docker-compose -f docker-compose.prod.yml exec -T ai-service curl --fail http://localhost:8000/health; do
-          #   echo "Waiting for AI service to be healthy..."
-          #   sleep 10
-          # done
-
-          # Cleanup
           docker system prune -af --filter "label!=com.docker.compose.project=devcanvas_prod"
