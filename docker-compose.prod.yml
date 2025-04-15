@@ -94,6 +94,27 @@ services:
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls=true"
       - "traefik.http.services.frontend.loadbalancer.server.port=3001"
+  ai-service:
+    image: ghcr.io/${{ env.LOWERCASE_OWNER }}/devcanvas_v2-ai-service:${TAG}
+    environment:
+      - PYTHONUNBUFFERED=1
+      # - UV_CACHE_DIR=/app/.uvcache
+      # - AI_MODEL_PATH=/app/models
+    volumes:
+      - ai_models:/app/models
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ai-service.rule=Host(`ai.localhost`)"
+      - "traefik.http.routers.ai-service.entrypoints=websecure"
+      - "traefik.http.routers.ai-service.tls=true"
+      - "traefik.http.services.ai-service.loadbalancer.server.port=80"
+    networks:
+      - app-network
 
 networks:
   app-network:
@@ -101,3 +122,4 @@ networks:
 
 volumes:
   postgres_data:
+  ai_models:
