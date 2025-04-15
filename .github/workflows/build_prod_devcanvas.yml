@@ -116,70 +116,70 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
-  deploy:
-    needs: build
-    if: |
-      github.event_name == 'push' ||
-      (github.event_name == 'workflow_dispatch' && inputs.environment == 'production')
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+  # deploy:
+  #   needs: build
+  #   if: |
+  #     github.event_name == 'push' ||
+  #     (github.event_name == 'workflow_dispatch' && inputs.environment == 'production')
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v3
 
-    - name: Deploy to DigitalOcean
-      uses: appleboy/ssh-action@v0.1.10
-      with:
-        host: ${{ secrets.DO_HOST }}
-        username: ${{ secrets.DO_USERNAME }}
-        key: ${{ secrets.DO_SSH_KEY }}
-        script: |
-          set -e
+  #   - name: Deploy to DigitalOcean
+  #     uses: appleboy/ssh-action@v0.1.10
+  #     with:
+  #       host: ${{ secrets.DO_HOST }}
+  #       username: ${{ secrets.DO_USERNAME }}
+  #       key: ${{ secrets.DO_SSH_KEY }}
+  #       script: |
+  #         set -e
 
-          # Authenticate with GHCR
-          echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+  #         # Authenticate with GHCR
+  #         echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
-          mkdir -p ~/deployments/devcanvas
-          cd ~/deployments/devcanvas
+  #         mkdir -p ~/deployments/devcanvas
+  #         cd ~/deployments/devcanvas
 
-          # Get compose file
-          docker run -d --name config-container ghcr.io/${{ needs.build.outputs.lowercase_owner }}/devcanvas-config:latest
-          docker cp config-container:/docker-compose.prod.yml .
-          docker stop config-container
-          docker rm config-container
+  #         # Get compose file
+  #         docker run -d --name config-container ghcr.io/${{ needs.build.outputs.lowercase_owner }}/devcanvas-config:latest
+  #         docker cp config-container:/docker-compose.prod.yml .
+  #         docker stop config-container
+  #         docker rm config-container
 
-          cat << EOF > .env
-          DATABASE_URL=postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@postgres:5432/${{ secrets.DB_NAME }}?schema=public
-          JWT_SECRET=${{ secrets.JWT_SECRET }}
-          STORAGE_TYPE=cloud
-          CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}
-          CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}
-          CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
-          AI_SERVICE_URL=http://ai-service:8000
-          GHCR_OWNER=${{ needs.build.outputs.lowercase_owner }}
-          TAG=${{ env.TAG }}
-          POSTGRES_VERSION=15
-          NODE_ENV=production
-          EOF
+  #         cat << EOF > .env
+  #         DATABASE_URL=postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@postgres:5432/${{ secrets.DB_NAME }}?schema=public
+  #         JWT_SECRET=${{ secrets.JWT_SECRET }}
+  #         STORAGE_TYPE=cloud
+  #         CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}
+  #         CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}
+  #         CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
+  #         AI_SERVICE_URL=http://ai-service:8000
+  #         GHCR_OWNER=${{ needs.build.outputs.lowercase_owner }}
+  #         TAG=${{ env.TAG }}
+  #         POSTGRES_VERSION=15
+  #         NODE_ENV=production
+  #         EOF
 
-          docker pull ghcr.io/${{ needs.build.outputs.lowercase_owner }}/devcanvas-config:latest
-          docker create --name config-container ghcr.io/${{ needs.build.outputs.lowercase_owner }}/devcanvas-config:latest
-          docker cp config-container:/docker-compose.prod.yml .
-          docker rm config-container
+  #         docker pull ghcr.io/${{ needs.build.outputs.lowercase_owner }}/devcanvas-config:latest
+  #         docker create --name config-container ghcr.io/${{ needs.build.outputs.lowercase_owner }}/devcanvas-config:latest
+  #         docker cp config-container:/docker-compose.prod.yml .
+  #         docker rm config-container
 
-          # Pull application images
-          docker pull ${{ env.REGISTRY }}/${{ needs.build.outputs.backend_image }}:${{ env.TAG }} || \
-            (sleep 30 && docker pull ${{ env.REGISTRY }}/${{ needs.build.outputs.backend_image }}:${{ env.TAG }})
+  #         # Pull application images
+  #         docker pull ${{ env.REGISTRY }}/${{ needs.build.outputs.backend_image }}:${{ env.TAG }} || \
+  #           (sleep 30 && docker pull ${{ env.REGISTRY }}/${{ needs.build.outputs.backend_image }}:${{ env.TAG }})
 
-          docker pull ${{ env.REGISTRY }}/${{ needs.build.outputs.frontend_image }}:${{ env.TAG }} || \
-            (sleep 30 && docker pull ${{ env.REGISTRY }}/${{ needs.build.outputs.frontend_image }}:${{ env.TAG }})
+  #         docker pull ${{ env.REGISTRY }}/${{ needs.build.outputs.frontend_image }}:${{ env.TAG }} || \
+  #           (sleep 30 && docker pull ${{ env.REGISTRY }}/${{ needs.build.outputs.frontend_image }}:${{ env.TAG }})
 
-          docker pull ${{ env.REGISTRY }}/${{ needs.build.outputs.ai_service_image }}:${{ env.TAG }} || \
-            (sleep 30 && docker pull ${{ env.REGISTRY }}/${{ needs.build.outputs.ai_service_image }}:${{ env.TAG }})
+  #         docker pull ${{ env.REGISTRY }}/${{ needs.build.outputs.ai_service_image }}:${{ env.TAG }} || \
+  #           (sleep 30 && docker pull ${{ env.REGISTRY }}/${{ needs.build.outputs.ai_service_image }}:${{ env.TAG }})
 
-          # Deploy
-          export COMPOSE_PROJECT_NAME=devcanvas_prod
-          docker-compose -f docker-compose.prod.yml down --remove-orphans
-          docker-compose -f docker-compose.prod.yml up -d --build
+  #         # Deploy
+  #         export COMPOSE_PROJECT_NAME=devcanvas_prod
+  #         docker-compose -f docker-compose.prod.yml down --remove-orphans
+  #         docker-compose -f docker-compose.prod.yml up -d --build
 
-          # Cleanup
-          docker system prune -af --filter "label!=com.docker.compose.project=devcanvas_prod"
+  #         # Cleanup
+  #         docker system prune -af --filter "label!=com.docker.compose.project=devcanvas_prod"

@@ -96,7 +96,7 @@ services:
       - ./ai-service:/app
       - /app/.venv
     ports:
-      - "8000:80"
+      - "5000:80"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.ai-service.rule=Host(`ai.localhost`)"
