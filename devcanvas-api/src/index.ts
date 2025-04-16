@@ -9,7 +9,7 @@ import projectRoutes from './routes/projectRoutes'
 import portfolioRoutes from './routes/portfolioRoutes'
 import listEndpoints from 'express-list-endpoints';
 import path from 'path';
-
+// import type { CorsOptions } from 'cors';
 
 dotenv.config();
 
@@ -18,14 +18,49 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const corsOptions = {
-  origin: ['*', 'http://localhost:3001', 'https://frontend.localhost', 'https://devcanvas.live'], // Frontend URL
-  credentials: true, // Allow cookies/auth headers
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'], // Ensure OPTIONS is included
-  // allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Expires', 'Pragma', 'auth_token'],
-  // allowedHeaders: '*',
+const frontendUrls = [
+  'http://localhost:3001',         // Local dev
+  'https://frontend.localhost',    // Docker/Traefik
+  'https://app.devcanvas.live',     // Production
+  'https://devcanvas.live'
+];
 
+const corsOptions = {
+  origin: frontendUrls, // Frontend URL
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'Cache-Control',
+    'Expires',
+    'Pragma',
+    'auth_token'
+  ],
 };
+
+// const frontendUrl = process.env.SITE_URL;
+// if (!frontendUrl) {
+//   throw new Error('SITE_URL environment variable is not defined');
+// }
+
+// const corsOptions: CorsOptions = {
+//   origin: [
+//     frontendUrl,
+//     'http://localhost:3001',
+//     'https://frontend.localhost'
+//   ],
+//   credentials: true,
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+//   allowedHeaders: [
+//     'Content-Type',
+//     'Authorization',
+//     'Cache-Control',
+//     'Expires',
+//     'Pragma',
+//     'auth_token'
+//   ],
+// };
 
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions)); // Handle preflight requests
@@ -37,7 +72,7 @@ app.use((req, res, next) => {
   console.log(`🔹 Headers:`, req.headers);
 
   if (req.body && Object.keys(req.body).length > 0) {
-    console.log(`🔹 Body:`, JSON.stringify(req.body, null, 2)); // Pretty print body
+    console.log(`🔹 Body:`, JSON.stringify(req.body, null, 2));
   } else {
     console.log(`🔹 Body: [No body or empty]`);
   }

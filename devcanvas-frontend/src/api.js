@@ -1,8 +1,12 @@
 import axios from "axios";
+import { getServiceUrl } from "./helpers/urlHelper";
+
+const backendAddress = getServiceUrl("backend");
 
 const canvasApi = axios.create({
-  baseURL: "http://localhost:3000",
-  // baseURL: "https://devcanvas-backend.onrender.com",  //productionUrl
+  baseURL: process.env.NODE_ENV === 'development'
+    ? "http://localhost:3000"
+    : backendAddress,
   validateStatus: function (status) {
     return status < 500;
   },
