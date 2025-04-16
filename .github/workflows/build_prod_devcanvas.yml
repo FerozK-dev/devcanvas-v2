@@ -96,7 +96,6 @@ jobs:
         cache-to: type=gha,mode=max
 
     - name: Build and push Nginx
-      id: build_nginx
       uses: docker/build-push-action@v3
       with:
         context: ./nginx
