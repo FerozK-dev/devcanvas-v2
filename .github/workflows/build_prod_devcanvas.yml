@@ -31,74 +31,82 @@ env:
   TAG: ${{ github.sha || inputs.ref }}
 
 jobs:
-  build:
-    if: ${{ !inputs.skip_build || github.event_name != 'workflow_dispatch' }}
+  build-and-push:
     runs-on: ubuntu-latest
-    outputs:
-      lowercase_owner: ${{ steps.set_vars.outputs.lowercase_owner }}
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      uses: docker/setup-buildx-action@v3
 
     - name: Login to GitHub Container Registry
-      uses: docker/login-action@v2
+      uses: docker/login-action@v3
       with:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
-        password: ${{ secrets.GHCR_PAT }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Build and push frontend
+    - name: Sanitize environment variables
+      id: sanitize
+      run: |
+        REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+        SHORT_SHA=$(echo ${GITHUB_SHA} | cut -c1-7)
+        echo "REPO_OWNER=$REPO_OWNER" >> $GITHUB_ENV
+        echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_ENV
+        echo "IMAGE_PREFIX=$REPO_OWNER/devcanvas_v2" >> $GITHUB_ENV
+
+    - name: Build and push Frontend
       id: build_frontend
       uses: docker/build-push-action@v3
       with:
         context: ./devcanvas-frontend
         file: ./devcanvas-frontend/Dockerfile.prod
         tags: |
-          ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:${{ env.TAG }}
-          ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:latest
-        push: ${{ github.event_name == 'push' }}
+          ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-frontend:${{ env.SHORT_SHA }}
+          ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-frontend:latest
+        push: true
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
-    - name: Build and push Nginx
-      uses: docker/build-push-action@v3
-      with:
-        context: ./nginx
-        file: ./nginx/Dockerfile
-        tags: |
-          ${{ env.REGISTRY }}/${{ env.NGINX_IMAGE }}:${{ env.TAG }}
-          ${{ env.REGISTRY }}/${{ env.NGINX_IMAGE }}:latest
-        build-args: |
-          FRONTEND_IMAGE=${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:${{ env.TAG }}
-        push: ${{ github.event_name == 'push' }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-
-    - name: Build and push backend
+    - name: Build and push Backend
+      id: build_backend
       uses: docker/build-push-action@v3
       with:
         context: ./devcanvas-api
         file: ./devcanvas-api/Dockerfile.prod
         tags: |
-          ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE }}:${{ env.TAG }}
-          ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE }}:latest
-        push: ${{ github.event_name == 'push' }}
+          ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-backend:${{ env.SHORT_SHA }}
+          ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-backend:latest
+        push: true
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
-    - name: Build and push AI service
+    - name: Build and push AI Service
+      id: build_ai
       uses: docker/build-push-action@v3
       with:
         context: ./ai-service
         file: ./ai-service/Dockerfile.prod
         tags: |
-          ${{ env.REGISTRY }}/${{ env.AI_SERVICE_IMAGE }}:${{ env.TAG }}
-          ${{ env.REGISTRY }}/${{ env.AI_SERVICE_IMAGE }}:latest
-        push: ${{ github.event_name == 'push' }}
+          ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-ai-service:${{ env.SHORT_SHA }}
+          ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-ai-service:latest
+        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Build and push Nginx
+      id: build_nginx
+      uses: docker/build-push-action@v3
+      with:
+        context: ./nginx
+        file: ./nginx/Dockerfile
+        tags: |
+          ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-nginx:${{ env.SHORT_SHA }}
+          ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-nginx:latest
+        build-args: |
+          FRONTEND_IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-frontend:${{ env.SHORT_SHA }}
+        push: true
         cache-from: type=gha
         cache-to: type=gha,mode=max
 

@@ -10,20 +10,19 @@ services:
       - ./traefik/dynamic_conf.toml:/app/configs/dynamic_conf.toml:ro
       - ./traefik/certs:/certs:ro
       - /var/run/docker.sock:/var/run/docker.sock:rw
-    networks:
-      - app_network
     ports:
       - "80:80"
       - "443:443"
+    networks:
+      - app_network
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`traefik.devcanvas.live`)"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.tls.certresolver=le"
-      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
 
   nginx:
-    image: devcanvas-nginx:prod
+    image: ghcr.io/ferozk-dev/devcanvas_v2-nginx:${TAG:-latest}
     command: /bin/sh -c /etc/nginx/init-prod.sh
     networks:
       - app_network
@@ -42,13 +41,18 @@ services:
       - "traefik.http.services.frontend.loadbalancer.server.port=8904"
 
   backend:
-    image: devcanvas-backend:prod
+    image: ghcr.io/ferozk-dev/devcanvas_v2-backend:${TAG:-latest}
     networks:
       - app_network
     environment:
       - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
-      - JWT_SECRET=${JWT_SECRET}
       - AI_SERVICE_URL=http://ai-service:5000
+      - JWT_SECRET=${JWT_SECRET}
+      - STORAGE_TYPE=${STORAGE_TYPE}
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+      - CLOUDINARY_URL=${CLOUDINARY_URL}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.api.rule=Host(`backend.devcanvas.live`)"
@@ -57,7 +61,7 @@ services:
       - "traefik.http.services.api.loadbalancer.server.port=3000"
 
   ai-service:
-    image: devcanvas-ai:prod
+    image: ghcr.io/ferozk-dev/devcanvas_v2-ai-service:${TAG:-latest}
     networks:
       - app_network
     labels:
