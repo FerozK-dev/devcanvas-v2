@@ -1,27 +1,20 @@
 # Stage 1: Build
 FROM node:20-alpine as builder
 WORKDIR /app
+
+# Copy package files first for better caching
 COPY package*.json ./
-RUN npm install --omit=dev
+
+# Install dependencies with verbose output
+RUN npm install --omit=dev --loglevel verbose
+
+# Copy source files
 COPY . .
-RUN npm run build
 
-# Stage 2: Serve
-FROM nginx:alpine
-WORKDIR /usr/share/nginx/html
+# Run build with debug output
+RUN npm run build || (echo "Build failed!"; cat /app/.npm/_logs/*; exit 1)
 
-# Remove default Nginx configs
-RUN rm -rf /etc/nginx/conf.d/*
-
-# Copy custom Nginx config
-COPY nginx.conf /etc/nginx/conf.d/
-
-# Copy built assets
-COPY --from=builder /app/build .
-
-# Set permissions
-RUN chmod -R 755 /usr/share/nginx/html && \
-    chown -R nginx:nginx /usr/share/nginx/html
-
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Stage 2: Export artifacts
+FROM alpine:latest
+WORKDIR /app
+COPY --from=builder /app/build ./build
