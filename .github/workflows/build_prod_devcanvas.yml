@@ -65,7 +65,6 @@ jobs:
 
     - name: Build and push Nginx
       uses: docker/build-push-action@v3
-      needs: [build_frontend]
       with:
         context: ./nginx
         file: ./nginx/Dockerfile
