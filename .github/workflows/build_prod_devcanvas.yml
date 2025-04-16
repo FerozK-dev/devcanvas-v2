@@ -95,6 +95,14 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
+    - name: Build Frontend Assets
+      run: |
+        cd devcanvas-frontend
+        npm install
+        npm run build
+        mkdir -p ../nginx/build
+        cp -R build/* ../nginx/build/
+
     - name: Build and push Nginx
       uses: docker/build-push-action@v3
       with:
