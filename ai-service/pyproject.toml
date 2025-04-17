@@ -4,11 +4,21 @@ version = "0.1.0"
 description = "AI service for devcanvas"
 readme = "README.md"
 requires-python = ">=3.12"
+
 dependencies = [
-    "agno>=1.2.4",
     "fastapi[standard]>=0.115.12",
-    "google-genai>=1.9.0",
-    "ollama>=0.4.7",
-    "pydantic-settings>=2.8.1",
     "uvicorn>=0.34.0",
+    "sqlalchemy>=2.0.15",
+    "asyncpg>=0.27.0",
+    "psycopg2-binary>=2.9.6",
+    "httpx>=0.24.1",
+    "python-dotenv>=1.0.0",
+    "python-jose[cryptography]>=3.3.0",
+    "passlib>=1.7.4",
+    "python-multipart>=0.0.6",
+    "pydantic-settings>=2.8.1",
+    "agno>=1.2.4",
+    "google-genai>=1.9.0",
+    "google-generativeai>=0.3.2",
+    "ollama>=0.4.7"
 ]
