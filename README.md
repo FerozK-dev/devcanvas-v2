@@ -33,6 +33,8 @@ You will need the following:
 mkcert "*.localhost" traefik.localhost frontend.localhost backend.localhost postgres.localhost
 ```
 
+For the step "Use the Certificate in Your Server", use only Traefik code. You don't need to add code to Node.js or Nginx.
+
 3. Build and compose up
 ```
 docker compose -f docker-compose.dev.yml build
