@@ -35,10 +35,10 @@ mkcert "*.localhost" traefik.localhost frontend.localhost backend.localhost post
 
 For the step "Use the Certificate in Your Server", use only Traefik code. You don't need to add code to Node.js or Nginx.
 
-3. Build and compose up
+4. Build and compose up
 ```
 docker compose -f docker-compose.dev.yml build
 docker compose -f docker-compose.dev.yml up
 ```
 
-4. The app is available at `https://frontend.localhost/`
+5. The app is available at `https://frontend.localhost/`
