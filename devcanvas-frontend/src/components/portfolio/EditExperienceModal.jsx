@@ -39,7 +39,7 @@ function EditExpereience({ isOpen, onClose, experience, setExperiences, experien
     }))
       .unwrap()
       .then((originalPromiseResult) => {
-        toast("Updating Experience")
+        toast("Experience updated")
         onClose()
         setExperiences(() =>
           experiences?.map((exp) =>

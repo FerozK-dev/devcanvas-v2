@@ -19,7 +19,7 @@ function Registration() {
 
   const registrationHandler = async () => {
     event.preventDefault();
-    toast('Signing you up.');
+    toast('Signing you up');
 
     const data = {
       email: email,
@@ -48,7 +48,7 @@ function Registration() {
           className="max-w-xl m-4 p-6 sm:p-10 bg-secondary-light dark:bg-secondary-dark rounded-xl shadow-xl text-left"
         >
         <p className="font-general-medium text-primary-dark dark:text-primary-light text-2xl mb-8">
-            Signup
+            Sign up
         </p>
         <FormInput
           inputLabel="First Name"
@@ -107,9 +107,9 @@ function Registration() {
         />
 
         <Button
-          title="Signup"
+          title="Sign up"
           type="submit"
-          aria-label="Signup"
+          aria-label="Sign up"
         />
       </form>
     </div>

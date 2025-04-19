@@ -34,7 +34,7 @@ function AboutMe({ data, isPublic }) {
           setPortfolioPublished(result?.publishPortfolio)
         })
         .catch((rejectedValueOrSerializedError) => {
-          toast('Sessions has expired. Please login again.');
+          toast('Session has expired. Please log in again.');
         });
     }
   }, [dispatch, isPublic, data, portfolioPublished]);

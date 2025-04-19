@@ -35,7 +35,7 @@ function Experience({ data, isPublic }) {
     )
       .unwrap()
       .then((originalPromiseResult) => {
-        toast("Experience Removed")
+        toast("Experience removed")
         setExperiences(experiences.filter((m) => m !== experience));
       })
       .catch((rejectedValueOrSerializedError) => {

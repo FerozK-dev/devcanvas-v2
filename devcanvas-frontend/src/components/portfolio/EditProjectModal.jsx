@@ -40,7 +40,7 @@ function EditProject({ isOpen, onClose, project, setProjects, projects }) {
     dispatch(updateProject({ id: project.id, formData }))
       .unwrap()
       .then((originalPromiseResult) => {
-        toast("Project Updated")
+        toast("Project updated")
         onClose()
         setProjects(() =>
           projects?.map((exp) =>

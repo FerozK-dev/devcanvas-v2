@@ -35,7 +35,7 @@ function Education({ data, isPublic }){
     )
       .unwrap()
       .then((originalPromiseResult) => {
-        toast("Education Removed")
+        toast("Education removed")
         setEducations(educations.filter((m) => m !== education));
       })
       .catch((rejectedValueOrSerializedError) => {
