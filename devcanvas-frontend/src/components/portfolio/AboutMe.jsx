@@ -60,16 +60,16 @@ function AboutMe({ data, isPublic }) {
         <div className="flex justify-between items-center">
           <button
             onClick={() => setResumeModalOpen(true)}
-            className="px-7 py-5 mt-5 md:px-9 md:py-4 font-medium md:font-semibold bg-gray-700 text-gray-50
-            text-sm rounded-md hover:bg-gray-500 hover:text-gray-700 transition ease-linear duration-500"
+            className="px-7 py-3 mt-5 md:px-9 md:py-4 font-medium md:font-semibold bg-gray-700 text-gray-50
+            text-sm rounded-md hover:bg-gray-500 hover:text-gray-50 transition ease-linear duration-200"
           >
             Get My CV
           </button>
 
           {!isPublic && <button
             onClick={() => setAiModalOpen(true)}
-            className="px-7 py-5 mt-5 md:px-9 md:py-4 font-medium md:font-semibold bg-gray-700 text-gray-50
-            text-sm rounded-md hover:bg-gray-500 hover:text-gray-700 transition ease-linear duration-500"
+            className="px-7 py-3 mt-5 md:px-9 md:py-4 font-medium md:font-semibold bg-gray-700 text-gray-50
+            text-sm rounded-md hover:bg-gray-500 hover:text-gray-50 transition ease-linear duration-200"
           >
             Generate CV
           </button>}
@@ -78,8 +78,8 @@ function AboutMe({ data, isPublic }) {
         <div className="text-center">
           <div className="flex justify-center my-16">
             <img
-              src={profileData?.profilePicture}
-              alt="Project display"
+              src={profileData?.profilePicture || blankProfile}
+              alt="Profile picture"
               onError={(e) => {
                 e.currentTarget.src = blankProfile // Fallback image
               }}
