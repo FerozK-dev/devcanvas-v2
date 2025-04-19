@@ -15,13 +15,13 @@ const Auth = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    toast('Verifying your credentials.');
+    toast('Verifying your credentials');
 
     dispatch(login({ email: email, password: password }))
       .unwrap()
       .then((originalPromiseResult) => {
         navigate("/my-portfolio");
-        toast('Logged In.');
+        toast('Logged in');
       })
       .catch((rejectedValueOrSerializedError) => {
         toast(rejectedValueOrSerializedError)
@@ -63,9 +63,9 @@ const Auth = () => {
           />
 
           <Button
-            title="Login"
+            title="Log in"
             type="submit"
-            aria-label="Login"
+            aria-label="Log in"
           />
 				</form>
 			</div>

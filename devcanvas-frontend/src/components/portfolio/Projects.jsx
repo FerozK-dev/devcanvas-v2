@@ -43,7 +43,7 @@ function Projects({ data, isPublic }) {
     )
       .unwrap()
       .then((originalPromiseResult) => {
-        toast("Project Removed")
+        toast("Project removed")
         setProjects(projects.filter((m) => m !== project));
       })
       .catch((rejectedValueOrSerializedError) => {

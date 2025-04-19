@@ -4,7 +4,7 @@ function NotFound() {
 
       <div class="container max-w-screen-xl mx-auto px-4">
         <div class="text-center">
-          <h2 class="font-medium text-gray-600 text-lg md:text-2xl uppercase mb-8">Sorry Page Not Found</h2>
+          <h2 class="font-medium text-gray-600 text-lg md:text-2xl uppercase mb-8">Sorry! Page Not Found</h2>
         </div>
       </div>
     </section>

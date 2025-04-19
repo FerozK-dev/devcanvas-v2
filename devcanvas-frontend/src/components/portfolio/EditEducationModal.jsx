@@ -45,7 +45,7 @@ function EditEducationModal({ isOpen, onClose, education, setEducations, educati
     }))
       .unwrap()
       .then((originalPromiseResult) => {
-        toast("Education Updated")
+        toast("Education updated")
         onClose()
         setEducations(() =>
           educations?.map((exp) =>

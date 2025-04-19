@@ -94,7 +94,7 @@ const authSlice = createSlice({
       .addCase(signup.rejected, (state, action) => {
         // Handle the error case for signup
         state.loading = false;
-        state.error = action.payload || "Failed to signup";
+        state.error = action.payload || "Failed to sign up";
       });
   },
 });

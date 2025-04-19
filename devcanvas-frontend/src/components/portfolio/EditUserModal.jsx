@@ -66,7 +66,7 @@ function EditUserModal({ isOpen, onClose, profile, setProfileData }) {
     dispatch(editUser(formData))
       .unwrap()
       .then((originalPromiseResult) => {
-        toast("Profile Updated")
+        toast("Profile updated")
         onClose()
         setProfileData(originalPromiseResult);
       })

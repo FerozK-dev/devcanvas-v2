@@ -36,7 +36,7 @@ const AppHeader = () => {
             </Link>
           </li>
           <li className='p-4 hover:bg-[#00df9a] rounded-xl m-3 cursor-pointer duration-300 hover:text-black'>
-            <button onClick={() => logoutHandler()}>Logout</button>
+            <button onClick={() => logoutHandler()}>Log out</button>
           </li>
         </ul>
       )}
@@ -45,12 +45,12 @@ const AppHeader = () => {
         <ul className='hidden md:flex'>
           <li className='p-4 hover:bg-[#00df9a] rounded-xl m-2 cursor-pointer duration-300 hover:text-black'>
             <Link to="./signup">
-              <button>Signup</button>
+              <button>Sign up</button>
             </Link>
           </li>
           <li className='p-4 hover:bg-[#00df9a] rounded-xl m-2 cursor-pointer duration-300 hover:text-black'>
             <Link to="./login">
-              <button>Login</button>
+              <button>Log in</button>
             </Link>
           </li>
         </ul>
@@ -79,7 +79,7 @@ const AppHeader = () => {
               </Link>
             </li>
             <li className='p-4 border-b rounded-xl hover:bg-[#00df9a] duration-300 hover:text-white cursor-pointer border-gray-600'>
-              <button onClick={() => logoutHandler()}>Logout</button>
+              <button onClick={() => logoutHandler()}>Log out</button>
             </li>
           </ul>
         )}
@@ -87,12 +87,12 @@ const AppHeader = () => {
           <ul className=''>
             <li className='p-4 border-b rounded-xl hover:bg-[#00df9a] duration-300 hover:text-black cursor-pointer border-gray-600'>
               <Link to="./signup">
-                Signup
+                Sign up
               </Link>
             </li>
             <li className='p-4 border-b rounded-xl hover:bg-[#00df9a] duration-300 hover:text-white cursor-pointer border-gray-600'>
               <Link to="./login">
-                Login
+                Log in
               </Link>
             </li>
           </ul>
