@@ -77,7 +77,7 @@ function EditUserModal({ isOpen, onClose, profile, setProfileData }) {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <h2 className="text-lg font-medium text-gray-800 mb-4">Edit Details</h2>
+      <h2 className="text-lg font-medium text-gray-800 mb-4">Edit Profile Details</h2>
       <form
         onSubmit={(e) => {
           console.log("Form submission event triggered"); // Debugging
@@ -208,13 +208,13 @@ function EditUserModal({ isOpen, onClose, profile, setProfileData }) {
             inputLabel="Profile Picture"
             labelFor="profile_pic"
             inputType="file"
-            inputId="work_email"
+            inputId="profile_picture"
             inputName="profile_picture"
             ariaLabelName="picture"
             onChange={(e) => setProfilePic(e.target.files[0])}
             required={false}
           />
-          <FormInput
+          {/* <FormInput
             inputLabel="CV"
             labelFor="CV"
             inputType="file"
@@ -223,7 +223,7 @@ function EditUserModal({ isOpen, onClose, profile, setProfileData }) {
             ariaLabelName="file"
             onChange={(e) => setResume(e.target.files[0])}
             required={false}
-          />
+          /> */}
         </div>
         <Button title="Save"/>
       </form>
