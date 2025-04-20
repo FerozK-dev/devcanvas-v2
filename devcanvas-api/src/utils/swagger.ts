@@ -17,18 +17,28 @@ const swaggerDefinition: SwaggerDefinition = {
       description: 'Development server',
     },
     {
-      url: 'https://api.devcanvas.live/api/v1',
+      url: 'https://backend.devcanvas.live/api/v1',
       description: 'Production server',
+    },
+    {
+      url: 'https://backend.localhost/api/v1',
+      description: 'Local server with traefik',
     },
   ],
   components: {
-    securitySchemes: {
-      bearerAuth: {
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
-      },
-    },
+    // securitySchemes: {
+    //   bearerAuth: {
+    //     type: 'http',
+    //     scheme: 'bearer',
+    //     bearerFormat: 'JWT',
+    //   },
+    // },
+    customAuth: {
+      type: 'apiKey',
+      in: 'header',
+      name: 'auth_token',
+      description: 'Custom authentication token'
+    }
   },
   security: [{
     bearerAuth: [],
@@ -39,7 +49,6 @@ const SwaggerOptions: Options = {
   swaggerDefinition,
   // Paths to files containing OpenAPI definitions
   apis: [
-    './src/routes/*.ts',
     './src/swagger/*.docs.ts'
   ],
 };
