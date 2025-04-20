@@ -16,7 +16,7 @@ const initialExperienceState = {
 };
 
 
-const fetchExperiences = createAsyncThunk("fetctExperience/experienceSlice", async () => {
+const fetchExperiences = createAsyncThunk("fetchExperience/experienceSlice", async () => {
   try {
     const experiences = await canvasApi.get("/api/v1/experiences", {
       headers: {
