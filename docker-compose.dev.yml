@@ -47,7 +47,7 @@ services:
       dockerfile: Dockerfile.dev
     environment:
       - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}?schema=public
-      - JWT_SECRET={JWT_SECRET}
+      - JWT_SECRET=${JWT_SECRET}
       - STORAGE_TYPE=${STORAGE_TYPE}
       - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
       - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
@@ -99,7 +99,7 @@ services:
       - PYTHONUNBUFFERED=1
       - PYTHONFAULTHANDLER=1
       - PYTHONDEVMODE=1
-      - JWT_SECRET={JWT_SECRET}
+      - JWT_SECRET=${JWT_SECRET}
       - JWT_ALGORITHM=${JWT_ALGORITHM}
       - SITE_URL=${SITE_URL}
       - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}

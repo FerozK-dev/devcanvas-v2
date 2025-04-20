@@ -67,7 +67,7 @@ services:
     networks:
       - app_network
     environment:
-      - JWT_SECRET={JWT_SECRET}
+      - JWT_SECRET=${JWT_SECRET}
       - JWT_ALGORITHM=${JWT_ALGORITHM}
       - SITE_URL=${SITE_URL}
       - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
