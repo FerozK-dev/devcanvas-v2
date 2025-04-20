@@ -9,11 +9,15 @@ import projectRoutes from './routes/projectRoutes'
 import portfolioRoutes from './routes/portfolioRoutes'
 import listEndpoints from 'express-list-endpoints';
 import path from 'path';
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
+import swaggerOptions from './utils/swagger';
 // import type { CorsOptions } from 'cors';
 
 dotenv.config();
 
 const app = express();
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -87,6 +91,7 @@ app.use('/api/v1/', experienceRoutes);
 app.use('/api/v1/', projectRoutes);
 app.use('/api/v1/', portfolioRoutes);
 app.use('/storage', express.static(path.join(__dirname, 'public/storage')));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
