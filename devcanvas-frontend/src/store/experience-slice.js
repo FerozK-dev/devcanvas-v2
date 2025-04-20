@@ -23,7 +23,9 @@ const fetchExperiences = createAsyncThunk("fetctExperience/experienceSlice", asy
         auth_token: `${JSON.parse(localStorage.getItem("auth_token"))}`,
       },
     });
-    return [...experiences.data];
+    if (experiences.status === 200) {
+      return [...experiences.data];
+    } else { return [] }  // Otherwise there are lots of NaN instead on the page when only frontend is running
   } catch (error) {}
 });
 

@@ -10,14 +10,16 @@ const initialProjectState = {
 };
 
 
-const fetchProjects = createAsyncThunk("fetctProjects/projectsSlice", async () => {
+const fetchProjects = createAsyncThunk("fetchProjects/projectsSlice", async () => {
   try {
     const projects = await canvasApi.get("/api/v1/projects", {
       headers: {
         auth_token: `${JSON.parse(localStorage.getItem("auth_token"))}`,
       },
     });
-    return [...projects.data];
+    if (projects.status === 200) {
+      return [...projects.data];
+    } else { return [] }  // Otherwise there are lots of NaN instead on the page when only frontend is running
   } catch (error) {}
 });
 

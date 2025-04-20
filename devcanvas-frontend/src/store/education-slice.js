@@ -15,14 +15,16 @@ const initialEducationState = {
 };
 
 
-const fetchEducations = createAsyncThunk("fetctEducation/educationSlice", async () => {
+const fetchEducations = createAsyncThunk("fetchEducation/educationSlice", async () => {
   try {
     const educations = await canvasApi.get("/api/v1/educations", {
       headers: {
         auth_token: `${JSON.parse(localStorage.getItem("auth_token"))}`,
       },
     });
-    return [...educations.data];
+    if (educations.status === 200) {
+      return [...educations.data];
+    } else { return [] }  // Otherwise there are lots of NaN instead on the page when only frontend is running
   } catch (error) {}
 });
 
