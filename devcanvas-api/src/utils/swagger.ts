@@ -1,4 +1,6 @@
 import { SwaggerDefinition, Options } from 'swagger-jsdoc';
+import path from 'path';
+
 
 const swaggerDefinition: SwaggerDefinition = {
   openapi: '3.0.0',
@@ -49,7 +51,9 @@ const SwaggerOptions: Options = {
   swaggerDefinition,
   // Paths to files containing OpenAPI definitions
   apis: [
-    './src/swagger/*.docs.ts'
+    process.env.NODE_ENV === 'production'
+      ? path.resolve(__dirname, '../swagger/*.docs.js') // dist/swagger in prod
+      : path.resolve(__dirname, '../../src/swagger/*.docs.ts') // src/swagger in dev
   ],
 };
 

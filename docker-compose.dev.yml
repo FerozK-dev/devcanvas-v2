@@ -47,6 +47,13 @@ services:
       dockerfile: Dockerfile.dev
     environment:
       - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}?schema=public
+      - JWT_SECRET={JWT_SECRET}
+      - STORAGE_TYPE=${STORAGE_TYPE}
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+      - CLOUDINARY_URL=${CLOUDINARY_URL}
+      - SITE_URL=${SITE_URL}
       - NODE_ENV=development
     ports:
       - "3000:3000"
@@ -92,6 +99,9 @@ services:
       - PYTHONUNBUFFERED=1
       - PYTHONFAULTHANDLER=1
       - PYTHONDEVMODE=1
+      - AI_DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@localhost:5432/${DB_NAME}
+      - JWT_SECRET={JWT_SECRET}
+      - JWT_ALGORITHM=${JWT_ALGORITHM}
     volumes:
       - ./ai-service:/app
       - /app/.venv
