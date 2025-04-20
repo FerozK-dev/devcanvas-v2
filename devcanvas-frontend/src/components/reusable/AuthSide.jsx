@@ -15,7 +15,7 @@ function AuthSide({link}) {
           <Link to={link}>
             <button className="hidden md:block text-white bg-gray-700 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-md text-sm px-7 py-3 md:px-9 md:py-4 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 ease-linear duration-200"
             >
-              Sign up
+              {link === '/login' ? "Log in" : "Sign up"}
             </button>
           </Link>
         </div>
