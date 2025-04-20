@@ -75,7 +75,7 @@ function AboutMe({ data, isPublic }) {
           </button>}
         </div>
 
-        <div className="text-center">
+        <div className="text-center w-full">
           <div className="flex justify-center my-16">
             <img
               src={profileData?.profilePicture || blankProfile}
@@ -88,12 +88,12 @@ function AboutMe({ data, isPublic }) {
             />
           </div>
 
-          <h6 className="font-medium text-gray-600 text-lg md:text-5xl uppercase mb-8">{profileData?.firstName} {profileData?.lastName}</h6>
+          <h6 className="w-full break-all font-medium text-gray-600 text-lg md:text-5xl uppercase mb-8">{profileData?.firstName} {profileData?.lastName}</h6>
 
-          <p className="font-normal text-gray-900 text-3xl md:text-4xl leading-none mb-8">{profileData?.title}</p>
+          <p className="w-full break-all font-normal text-gray-900 text-3xl md:text-4xl leading-none mb-8">{profileData?.title}</p>
 
-          <p className="font-bold text-gray-600 text-md md:text-xl mb-16">{profileData?.headline}</p>
-          <p className="font-normal text-gray-600 text-md md:text-xl mb-16">{profileData?.aboutMe}</p>
+          <p className="w-full break-all font-bold text-gray-600 text-md md:text-xl mb-16">{profileData?.headline}</p>
+          <p className="w-full break-all font-normal text-gray-600 text-md md:text-xl mb-16">{profileData?.aboutMe}</p>
 
           {!isPublic && (
             <div className="justify-items-center">
