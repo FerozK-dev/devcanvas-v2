@@ -1,16 +1,14 @@
 FROM python:3.12-slim
 
-# Install uv.
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-# Copy the application into the container.
+WORKDIR /app
 COPY . /app
 
-# Install the application dependencies.
-WORKDIR /app
-RUN uv sync --frozen --no-cache
+# Create a virtual environment manually and install deps
+RUN uv venv /app/.venv && \
+    . /app/.venv/bin/activate && \
+    uv pip install -e . --no-cache
 
-# Copy application
-COPY . .
-
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "5000"]
+# Use the virtualenv binary path for uvicorn
+CMD ["/app/.venv/bin/uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "5000"]
