@@ -62,9 +62,9 @@ function Education({ data, isPublic }){
     const { id, description, startYear, endYear, school, degree, field, grade, activities} = education;
     return (
       <div className="w-full bg-gray-50 px-8 py-10 rounded-md" key={id}>
-        <h4 className="break-all font-medium text-gray-700 text-lg mb-4">{school}</h4>
-        <p className="break-all font-small text-gray-700 text-lg mb-4">{formatDate(startYear)} - {formatDate(endYear)} {degree} {field}</p>
-        <p className="break-all font-normal text-gray-500 text-md mb-4">{description}</p>
+        <h4 className="break-word font-medium text-gray-700 text-lg mb-4">{school}</h4>
+        <p className="break-word font-small text-gray-700 text-lg mb-4">{formatDate(startYear)} - {formatDate(endYear)} {degree} {field}</p>
+        <p className="break-word font-normal text-gray-500 text-md mb-4">{description}</p>
 
         <div className="relative">
           <h6 className="font-semibold text-gray-500 text-md z-10">Grade: {grade}</h6>

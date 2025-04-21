@@ -71,7 +71,7 @@ function Experience({ data, isPublic }) {
           <h6 className="font-medium text-gray-400 text-base uppercase">
             Company
           </h6>
-          <p className="font-semibold text-gray-600 text-base break-all">
+          <p className="font-semibold text-gray-600 text-base break-word">
             {company}{" "}
             <span className="font-normal text-gray-300">/ {location}</span>
           </p>
@@ -82,7 +82,7 @@ function Experience({ data, isPublic }) {
           <h6 className="font-medium text-gray-400 text-base uppercase">
             Position
           </h6>
-          <p className="font-normal text-gray-400 text-base break-all">
+          <p className="font-normal text-gray-400 text-base break-word">
             {title}
           </p>
         </div>
