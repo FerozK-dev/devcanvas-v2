@@ -43,29 +43,6 @@ const corsOptions = {
   ],
 };
 
-// const frontendUrl = process.env.SITE_URL;
-// if (!frontendUrl) {
-//   throw new Error('SITE_URL environment variable is not defined');
-// }
-
-// const corsOptions: CorsOptions = {
-//   origin: [
-//     frontendUrl,
-//     'http://localhost:3001',
-//     'https://frontend.localhost'
-//   ],
-//   credentials: true,
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-//   allowedHeaders: [
-//     'Content-Type',
-//     'Authorization',
-//     'Cache-Control',
-//     'Expires',
-//     'Pragma',
-//     'auth_token'
-//   ],
-// };
-
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions)); // Handle preflight requests
 

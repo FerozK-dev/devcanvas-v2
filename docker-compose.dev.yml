@@ -53,7 +53,6 @@ services:
       - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
       - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
       - CLOUDINARY_URL=${CLOUDINARY_URL}
-      - SITE_URL=${SITE_URL}
       - NODE_ENV=development
     ports:
       - "3000:3000"
@@ -101,7 +100,6 @@ services:
       - PYTHONDEVMODE=1
       - JWT_SECRET=${JWT_SECRET}
       - JWT_ALGORITHM=${JWT_ALGORITHM}
-      - SITE_URL=${SITE_URL}
       - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
     volumes:
@@ -114,7 +112,7 @@ services:
       - "traefik.http.routers.ai-service.rule=Host(`ai.localhost`)"
       - "traefik.http.routers.ai-service.entrypoints=websecure"
       - "traefik.http.routers.ai-service.tls=true"
-      - "traefik.http.services.ai-service.loadbalancer.server.port=80"
+      - "traefik.http.services.ai-service.loadbalancer.server.port=5000"
     networks:
       - app-network
 
