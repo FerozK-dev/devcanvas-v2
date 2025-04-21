@@ -41,12 +41,13 @@ function AboutMe({ data, isPublic }) {
 
   const updatePortfolioStatus = () => {
     dispatch(
-      togglePublish())
+      togglePublish()
+    )
       .unwrap()
       .then((originalPromiseResult) => {
-        toast(`${portfolioPublished ? "Un-Published" : "Published"  } Portfolio`)
-        setPortfolioPublished(!profileData?.publish_portfolio)
-        if (!profileData?.publish_portfolio) { window.open(`/portfolio/${profileData.id}`,'_blank', 'rel=noopener noreferrer')}
+        toast(`${portfolioPublished ? "Un-Published" : "Published" } Portfolio`)
+        if (!portfolioPublished) { window.open(`/portfolio/${profileData.id}`,'_blank', 'rel=noopener noreferrer')}
+        setPortfolioPublished(!portfolioPublished)
       })
       .catch((rejectedValueOrSerializedError) => {
         alert(rejectedValueOrSerializedError.message);
@@ -88,12 +89,12 @@ function AboutMe({ data, isPublic }) {
             />
           </div>
 
-          <h6 className="w-full break-all font-medium text-gray-600 text-lg md:text-5xl uppercase mb-8">{profileData?.firstName} {profileData?.lastName}</h6>
+          <h6 className="w-full break-word font-medium text-gray-600 text-lg md:text-5xl uppercase mb-8">{profileData?.firstName} {profileData?.lastName}</h6>
 
-          <p className="w-full break-all font-normal text-gray-900 text-3xl md:text-4xl leading-none mb-8">{profileData?.title}</p>
+          <p className="w-full break-word font-normal text-gray-900 text-3xl md:text-4xl leading-none mb-8">{profileData?.title}</p>
 
-          <p className="w-full break-all font-bold text-gray-600 text-md md:text-xl mb-16">{profileData?.headline}</p>
-          <p className="w-full break-all font-normal text-gray-600 text-md md:text-xl mb-16">{profileData?.aboutMe}</p>
+          <p className="w-full break-word font-bold text-gray-600 text-md md:text-xl mb-16">{profileData?.headline}</p>
+          <p className="w-full break-word font-normal text-gray-600 text-md md:text-xl mb-16">{profileData?.aboutMe}</p>
 
           {!isPublic && (
             <div className="justify-items-center">
@@ -110,7 +111,7 @@ function AboutMe({ data, isPublic }) {
                     type="button"
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
-                    onClick={() => updatePortfolioStatus(true)}
+                    onClick={() => updatePortfolioStatus()}
                     className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white"
                   >
                     {portfolioPublished ? "Un-Publish" : "Publish"  } Portfolio
