@@ -22,13 +22,6 @@ function EditProject({ isOpen, onClose, project, setProjects, projects }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const newProject = {
-      title: title,
-      description: description,
-      id: project.id,
-      dipslayImage: picture
-    }
-
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);

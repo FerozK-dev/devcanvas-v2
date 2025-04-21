@@ -43,12 +43,13 @@ const ProjectForm = ({
           customClass="col-span-2"
         />
         <FormInput
-          inputLabel="Display Picture"
+          inputLabel="Display picture"
           labelFor="display_picture"
           inputType="file"
           inputId="display_picture"
           inputName="display_picture"
           ariaLabelName="picture"
+          required={false}
           onChange={(e) => setPicture(e.target.files[0])}
         />
       </div>

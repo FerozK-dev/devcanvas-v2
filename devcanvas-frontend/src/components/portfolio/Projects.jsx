@@ -35,6 +35,11 @@ function Projects({ data, isPublic }) {
     setEditModalOpen(true);
   };
 
+  const openNewModal = () => {
+    setSelectedProject(null);
+    setModalOpen(true);
+  };
+
   const deleteHandler = (project) => {
     dispatch(
       deleteProject({
@@ -58,8 +63,8 @@ function Projects({ data, isPublic }) {
       <div className="flex flex-col lg:flex-row space-y-6 lg:space-y-0 lg:space-x-6" key={id}>
         <div className=" w-96">
           <img
-            src={displayImage}
-            alt="Project Demo"
+            src={displayImage || projectBlank}
+            alt="Project demo"
             onError={(e) => {
               e.currentTarget.src = projectBlank
             }}
@@ -70,10 +75,10 @@ function Projects({ data, isPublic }) {
 
         <span className="hidden lg:block w-0.5 bg-gray-300"></span>
 
-        <div className="w-3/5 h-72">
-          <h1 className="font-normal text-gray-700 text-3xl md:text-4xl mb-5">{title}</h1>
+        <div className="h-full w-3/5 min-h-72">
+          <h1 className="font-normal text-gray-700 text-3xl md:text-4xl mb-5 break-word">{title}</h1>
 
-          <p className="font-normal text-gray-500 text-sm md:text-base">{description}</p>
+          <p className="font-normal text-gray-500 text-sm md:text-base break-word">{description}</p>
           {/* <p className="font-normal text-gray-500 text-sm md:text-base">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vitae dignissimos non culpa, aperiam quas facilis fuga aliquid iure, inventore, laboriosam dicta voluptatem consequatur quo. Repellendus aliquam ipsam aspernatur quo impedit.</p> */}
         </div>
         {!isPublic && (
@@ -115,7 +120,7 @@ function Projects({ data, isPublic }) {
         {!isPublic && (
           <div className="grid justify-items-end">
             <button
-              onClick={() => setModalOpen(true)}
+              onClick={() => openNewModal()}
               className="text-white bg-gray-700 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
             >
               Add a Project
