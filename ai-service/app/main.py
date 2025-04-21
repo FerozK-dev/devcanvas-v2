@@ -16,6 +16,7 @@ app = FastAPI(title="DevCanvas AI")
 # Include routes
 app.include_router(agent_router)
 
+
 @app.get("/")
 async def root():
     return {"message": "Hello Bigger Applications!"}

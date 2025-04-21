@@ -1,66 +1,82 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlmodel import SQLModel, Field, Relationship
 
-Base = declarative_base()
+class UserBase(SQLModel):    
+    firstName:str
+    lastName:str
+    email:str = Field(unique=True)
+    password:str
+    location:str | None = Field(nullable=True)
+    aboutMe:str | None = Field(nullable=True)
+    contact:str | None = Field(nullable=True)
+    title:str | None = Field(nullable=True)
+    headline:str | None = Field(nullable=True)
+    githubUrl:str | None = Field(nullable=True)
+    linkedUrl:str | None = Field(nullable=True)
+    workEmail:str | None = Field(nullable=True)
+    publishPortfolio: bool
 
-class User(Base):
+    
+class EducationBase(SQLModel):
+    
+    userId:int = Field(foreign_key="User.id")
+    school:str | None = Field(nullable=True)
+    degree:str | None = Field(nullable=True)
+    field:str | None = Field(nullable=True)
+    startYear:str | None = Field(nullable=True)
+    endYear:str | None = Field(nullable=True)
+    grade: str
+
+    
+class ProjectBase(SQLModel):
+    
+    userId:int = Field(foreign_key="User.id")
+    title:str | None = Field(nullable=True)
+    description:str | None = Field(nullable=True)
+
+    
+class ExperienceBase(SQLModel):
+   
+    userId:int = Field(foreign_key="User.id")
+    title:str | None = Field(nullable=True)
+    company:str | None = Field(nullable=True)
+    location:str | None = Field(nullable=True)
+    description:str | None = Field(nullable=True)
+    startDate:str | None = Field(nullable=True)
+    endDate:str | None = Field(nullable=True)
+
+    
+class User(UserBase, table=True):
     __tablename__ = "User"
 
-    id = Column(Integer, primary_key=True, index=True)
-    firstName = Column(String)
-    lastName = Column(String)
-    email = Column(String, unique=True)
-    password = Column(String)
-    location = Column(String, nullable=True)
-    aboutMe = Column(String, nullable=True)
-    contact = Column(String, nullable=True)
-    title = Column(String, nullable=True)
-    headline = Column(String, nullable=True)
-    githubUrl = Column(String, nullable=True)
-    linkedUrl = Column(String, nullable=True)
-    workEmail = Column(String, nullable=True)
-    publishPortfolio = Column(Boolean)
+    id:int = Field(primary_key=True, index=True)
+    educations: list["Education"] = Relationship(back_populates="user")
+    projects: list["Project"] = Relationship(back_populates="user")
+    experiences: list["Experience"] = Relationship(back_populates="user")
 
-    educations = relationship("Education", back_populates="user")
-    projects = relationship("Project", back_populates="user")
-    experiences = relationship("Experience", back_populates="user")
 
-class Education(Base):
+class Education(EducationBase, table=True):
     __tablename__ = "Education"
 
-    id = Column(Integer, primary_key=True, index=True)
-    userIid = Column(Integer, ForeignKey("User.id"))
-    school = Column(String, nullable=True)
-    degree = Column(String, nullable=True)
-    field = Column(String, nullable=True)
-    startDate = Column(String, nullable=True)
-    endDate = Column(String, nullable=True)
-    grade = (String)
+    id:int = Field(primary_key=True, index=True)
+    user: User = Relationship(back_populates="educations")
 
-    user = relationship("User", back_populates="educations")
-
-class Project(Base):
+class Project(ProjectBase, table=True):
     __tablename__ = "Project"
 
-    id = Column(Integer, primary_key=True, index=True)
-    userId = Column(Integer, ForeignKey("User.id"))
-    title = Column(String, nullable=True)
-    description = Column(String, nullable=True)
+    id:int = Field(primary_key=True, index=True)
+    user: User = Relationship(back_populates="projects")
 
-    user = relationship("User", back_populates="projects")
 
-class Experience(Base):
+class Experience(ExperienceBase, table=True):
     __tablename__ = "Experience"
 
-    id = Column(Integer, primary_key=True, index=True)
-    userId = Column(Integer, ForeignKey("User.id"))
-    title = Column(String, nullable=True)
-    company = Column(String, nullable=True)
-    location = Column(String, nullable=True)
-    school = Column(String, nullable=True)
-    description = Column(String, nullable=True)
-    startDate = Column(String, nullable=True)
-    endDate = Column(String, nullable=True)
+    id:int = Field(primary_key=True, index=True)
+    user: User = Relationship(back_populates="experiences")
 
-    user = relationship("User", back_populates="experiences")
+
+class UserPublic(UserBase):
+    educations: list[EducationBase] = []
+    projects: list[ProjectBase] = []
+    experiences: list[ExperienceBase] = []
+
+

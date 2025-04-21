@@ -67,9 +67,11 @@ services:
     networks:
       - app_network
     environment:
-      - AI_DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@localhost:5432/${DB_NAME}
       - JWT_SECRET={JWT_SECRET}
       - JWT_ALGORITHM=${JWT_ALGORITHM}
+      - SITE_URL=${SITE_URL}
+      - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.ai.rule=Host(`ai.devcanvas.live`) || PathPrefix(`/ai`)"
