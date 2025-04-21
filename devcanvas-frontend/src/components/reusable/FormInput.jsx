@@ -30,7 +30,7 @@ const FormInput = ({
         aria-label={ariaLabelName}
         value={value}
         onChange={onChange}
-        required={required !== undefined ? required : true}
+        required={required !== false}
 			/>
 		</div>
 	);
