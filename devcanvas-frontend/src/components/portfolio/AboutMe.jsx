@@ -135,6 +135,7 @@ function AboutMe({ data, isPublic }) {
               />
               <AiResumeModal
                 isOpen={aiModalOpen}
+                profile={profileData}
                 onClose={() => setAiModalOpen(false)}
               />
             </div>
