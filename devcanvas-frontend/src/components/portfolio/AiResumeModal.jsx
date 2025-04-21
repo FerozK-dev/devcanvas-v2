@@ -1,15 +1,32 @@
 // ResumeGenerator.jsx
-import { useState } from 'react';
-// import api from '../api';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { generateResume } from '../../store/resume-slice';
+import ResumeDocument from './../reusable/ResumeDocument';
 import Modal from "../reusable/EditModal";
+import toast, { Toaster } from "react-hot-toast";
+import { BlobProvider } from '@react-pdf/renderer';
 
-function ResumeGenerator({ isOpen, onClose }) {
+function AiResumeModal({ isOpen, onClose, profile }) {
   const [isGenerating, setIsGenerating] = useState(false);
-  const [resumeUrl, setResumeUrl] = useState(null);
+  // const [resumeUrl, setResumeUrl] = useState(null);
+  const dispatch = useDispatch();
+  const [resumeData, setResumeData] = useState();
 
   const handleGenerate = async () => {
     setIsGenerating(true);
-    setResumeUrl("https://res.cloudinary.com/dng8erffi/image/upload/v1744131072/resumes/1744131071556-Feroz%20Khan%27s%20Resume-3.pdf.pdf")
+    dispatch(generateResume())
+    .unwrap()
+    .then((result) => {
+      setResumeData(result);
+    })
+    .catch(() => {
+      toast('Resume could not be generated. Please try again');
+    })
+    .finally(() => {
+      setIsGenerating(false);
+    });
   };
 
   return (
@@ -19,31 +36,62 @@ function ResumeGenerator({ isOpen, onClose }) {
           DevCanvas allows you to create a personalized CV through its integrated AI.
         </p>
 
-        <p className="text-black dark:text-gray-400">
-          Disclaimer: By clicking the below button you are agreeing to share data with third party large language models
-        </p>
+        {!resumeData && (
+          <>
+            <p className="text-black dark:text-gray-400">
+              Disclaimer: By clicking the button below you are agreeing to share data with third party large language models.
+            </p>
 
-        <button
-          onClick={handleGenerate}
-          disabled={isGenerating}
-          className="text-white bg-gray-700 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium
-          rounded-full text-sm px-5 py-2.5 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-        >
-          {isGenerating ? 'Generating...' : 'Generate Resume'}
-        </button>
-
-        {resumeUrl && (
-          <iframe
-            src={resumeUrl}
-            title="Generated Resume"
-            width="100%"
-            height="600px"
-            className="mt-4"
-          />
+            <button
+              onClick={handleGenerate}
+              disabled={isGenerating}
+              className="text-white bg-gray-700 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium
+              rounded-full text-sm px-5 py-2.5 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+            >
+              {isGenerating ? 'Generating...' : 'Generate Resume'}
+            </button>
+          </>
         )}
+
+      {resumeData && (
+        <BlobProvider
+          document={
+            <ResumeDocument
+              name={`${profile?.firstName} ${profile?.lastName}`}
+              email={profile?.email}
+              userData={profile}
+              data={resumeData}
+            />
+          }
+        >
+          {({ url, loading }) =>
+            loading ? (
+              <p>Generating preview...</p>
+            ) : (
+              <>
+                <iframe
+                  src={url}
+                  width="100%"
+                  height="600px"
+                  className="mt-4 border rounded"
+                  title="Resume Preview"
+                />
+                <a
+                  href={url}
+                  download="resume.pdf"
+                  className="text-white bg-gray-700 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium
+                            rounded-full text-sm px-5 py-2.5 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                >
+                  Download Resume
+                </a>
+              </>
+            )
+          }
+        </BlobProvider>
+      )}
       </div>
     </Modal>
   );
 }
 
-export default ResumeGenerator
+export default AiResumeModal;
