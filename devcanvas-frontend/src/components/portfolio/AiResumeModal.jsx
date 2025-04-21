@@ -22,7 +22,7 @@ function AiResumeModal({ isOpen, onClose, profile }) {
       setResumeData(result);
     })
     .catch(() => {
-      toast('Resume could not be generated. Please try again');
+      toast('CV could not be generated. Please try again');
     })
     .finally(() => {
       setIsGenerating(false);
@@ -32,23 +32,24 @@ function AiResumeModal({ isOpen, onClose, profile }) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="flex flex-col items-center text-center space-y-4">
-        <p className="text-lg text-black md:text-xl dark:text-gray-400">
+        <p className="text-lg text-black md:text-xl dark:text-gray-400 mr-4">
           DevCanvas allows you to create a personalized CV through its integrated AI.
         </p>
 
         {!resumeData && (
           <>
-            <p className="text-black dark:text-gray-400">
-              Disclaimer: By clicking the button below you are agreeing to share data with third party large language models.
+            <p className="text-black dark:text-gray-400 py-4">
+              Disclaimer: By clicking the button below, you agree to share data with third-party large language models.
             </p>
 
             <button
               onClick={handleGenerate}
               disabled={isGenerating}
               className="text-white bg-gray-700 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium
-              rounded-full text-sm px-5 py-2.5 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+          rounded-full text-sm px-5 py-2.5 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700
+          ease-linear duration-200"
             >
-              {isGenerating ? 'Generating...' : 'Generate Resume'}
+              {isGenerating ? 'Generating...' : 'Generate CV'}
             </button>
           </>
         )}
@@ -82,7 +83,7 @@ function AiResumeModal({ isOpen, onClose, profile }) {
                   className="text-white bg-gray-700 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium
                             rounded-full text-sm px-5 py-2.5 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
                 >
-                  Download Resume
+                  Download CV
                 </a>
               </>
             )
