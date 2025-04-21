@@ -86,7 +86,7 @@ function EditUserModal({ isOpen, onClose, profile, setProfileData }) {
       >
         <div className="grid grid-cols-2 gap-4">
           <FormInput
-            inputLabel="First Name"
+            inputLabel="First name"
             labelFor="firstName"
             inputType="text"
             inputId="firstName"
@@ -97,7 +97,7 @@ function EditUserModal({ isOpen, onClose, profile, setProfileData }) {
             onChange={(e) => setFName(e.target.value)}
           />
           <FormInput
-            inputLabel="Last Name"
+            inputLabel="Last name"
             labelFor="lastName"
             inputType="text"
             inputId="lastName"
@@ -131,7 +131,7 @@ function EditUserModal({ isOpen, onClose, profile, setProfileData }) {
           />
 
           <FormInput
-            inputLabel="About Me"
+            inputLabel="About me"
             labelFor="about_me"
             inputType="text"
             inputId="about_me"
@@ -205,7 +205,7 @@ function EditUserModal({ isOpen, onClose, profile, setProfileData }) {
           /> */}
 
           <FormInput
-            inputLabel="Profile Picture"
+            inputLabel="Profile picture"
             labelFor="profile_pic"
             inputType="file"
             inputId="profile_picture"
