@@ -95,13 +95,13 @@ function Registration() {
           onChange={(e) => setPassword(e.target.value)}
         />
         <FormInput
-          inputLabel="confirm Password"
+          inputLabel="Confirm password"
           labelFor="confirm password"
           inputType="password"
           inputId="confirm password"
           inputName="confirm password"
           placeholderText="Confirm password"
-          ariaLabelName="Confirm Password"
+          ariaLabelName="Confirm password"
           value={passwordConf}
           onChange={(e) => setPasswordConf(e.target.value)}
         />
