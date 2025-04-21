@@ -78,22 +78,22 @@ resume_agent: Agent = Agent(
 )
 
 
-def generate_resume(user: UserPublic, job_description: str | None = None) -> ResumeGenerateResult:
+def generate_resume(
+    user: UserPublic, job_description: str | None = None
+) -> ResumeGenerateResult:
     """ """
-    print(user)
-
     data_send_to_ai = f"""
         Education: 
-         - {user.model_dump_json(include={'educations'})}
+         - {user.model_dump_json(include={"educations"})}
         Project: 
-         - {user.model_dump_json(include={'projects'})}
+         - {user.model_dump_json(include={"projects"})}
         Experience: 
-         - {user.model_dump_json(include={'experiences'})}
+         - {user.model_dump_json(include={"experiences"})}
     
     """
-
-    print(data_send_to_ai)
-    question = f"Create a resume for the user with the following background {data_send_to_ai}."
+    question = (
+        f"Create a resume for the user with the following background {data_send_to_ai}."
+    )
 
     if job_description is not None:
         question += f"Tailor the resume to highlight the user's skill to match this job description: {job_description}"

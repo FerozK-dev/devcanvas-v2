@@ -16,7 +16,7 @@ router = APIRouter(
 @router.post("/create-resume", response_model=ResumeGenerateResult)
 async def create_resume(
     user: Annotated[UserPublic, Depends(get_current_user)],
-    job_description: str | None = None
+    job_description: str | None = None,
 ):
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
