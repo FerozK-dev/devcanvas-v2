@@ -22,8 +22,11 @@ export const createProject = async (req: AuthenticatedRequest, res: Response ): 
   try {
     const projectData = req.body;
 
-    if (req.files) {
-      const files = req.files as Record<string, Express.Multer.File[]>;
+    // We use single() instead of fields(), so req.file instead of req.files
+    if (req.file) {
+      const files = {
+        displayImage: [req.file]
+      } as Record<string, Express.Multer.File[]>;
 
       if (files.displayImage) {
         projectData.displayImage = await storage.upload(
