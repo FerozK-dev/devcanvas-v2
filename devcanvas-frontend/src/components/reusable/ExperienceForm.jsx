@@ -41,7 +41,7 @@ const ExperienceForm = ({
           inputType="text"
           inputId="company"
           inputName="company"
-          placeholderText="Company Name"
+          placeholderText="Company name"
           ariaLabelName="company"
           value={company}
           onChange={(e) => setCompany(e.target.value)}
@@ -70,7 +70,7 @@ const ExperienceForm = ({
           customClass="col-span-2"
         />
         <FormInput
-          inputLabel="Start Date"
+          inputLabel="Start date"
           labelFor="start_date"
           inputType="date"
           inputId="start_date"
@@ -81,7 +81,7 @@ const ExperienceForm = ({
 
         />
         <FormInput
-          inputLabel="End Date"
+          inputLabel="End date"
           labelFor="end_date"
           inputType="date"
           inputId="end_date"

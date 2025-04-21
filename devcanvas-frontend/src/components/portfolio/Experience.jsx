@@ -35,7 +35,7 @@ function Experience({ data, isPublic }) {
     )
       .unwrap()
       .then((originalPromiseResult) => {
-        toast("Experience Removed")
+        toast("Experience removed")
         setExperiences(experiences.filter((m) => m !== experience));
       })
       .catch((rejectedValueOrSerializedError) => {
@@ -46,6 +46,11 @@ function Experience({ data, isPublic }) {
   const openEditModal = (experience) => {
     setSelectedExperience(experience);
     setEditModalOpen(true);
+  };
+
+  const openNewModal = () => {
+    setSelectedExperience(null);
+    setModalOpen(true);
   };
 
   const formatDate = (dateString) => {
@@ -66,7 +71,7 @@ function Experience({ data, isPublic }) {
           <h6 className="font-medium text-gray-400 text-base uppercase">
             Company
           </h6>
-          <p className="font-semibold text-gray-600 text-base">
+          <p className="font-semibold text-gray-600 text-base break-word">
             {company}{" "}
             <span className="font-normal text-gray-300">/ {location}</span>
           </p>
@@ -77,7 +82,7 @@ function Experience({ data, isPublic }) {
           <h6 className="font-medium text-gray-400 text-base uppercase">
             Position
           </h6>
-          <p className="font-normal text-gray-400 text-base">
+          <p className="font-normal text-gray-400 text-base break-word">
             {title}
           </p>
         </div>
@@ -117,13 +122,13 @@ function Experience({ data, isPublic }) {
 
         <h1 className="font-medium text-gray-700 text-3xl md:text-4xl mb-5">Experience</h1>
 
-        <p className="font-normal text-gray-500 text-xs md:text-base mb-20">Below is a summary of the places I studied</p>
+        <p className="font-normal text-gray-500 text-xs md:text-base mb-10">Below is a summary of the places I worked</p>
         {renderExperience}
 
         {!isPublic && (
-          <>
+          <div className="mt-10 grid justify-items-end">
             <button
-              onClick={() => setModalOpen(true)}
+              onClick={() => openNewModal()}
               className="text-white bg-gray-700 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
             >
               Add Experience
@@ -143,7 +148,7 @@ function Experience({ data, isPublic }) {
                 dispatch={dispatch}
               />
             )}
-          </>
+          </div>
         )}
       </div>
     </section>

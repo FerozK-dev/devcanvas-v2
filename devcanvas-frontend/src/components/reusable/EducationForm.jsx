@@ -56,7 +56,7 @@ const EducationForm = ({
           inputType="text"
           inputId="Field"
           inputName="Field"
-          placeholderText="Your Field"
+          placeholderText="Your field"
           ariaLabelName="Field"
           value={field}
           onChange={(e) => setField(e.target.value)}
@@ -67,29 +67,29 @@ const EducationForm = ({
           inputType="text"
           inputId="description"
           inputName="description"
-          placeholderText="study description"
+          placeholderText="Study description"
           ariaLabelName="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           customClass="col-span-2"
         />
         <FormInput
-          inputLabel="Start Year"
-          labelFor="start_Year"
+          inputLabel="Start year"
+          labelFor="start_year"
           inputType="date"
-          inputId="start_Year"
-          inputName="start_Year"
-          ariaLabelName="start Year"
+          inputId="start_year"
+          inputName="start_year"
+          ariaLabelName="Start year"
           value={startYear ? new Date(startYear).toISOString().split("T")[0] : ""}
           onChange={(e) => setStartYear(new Date(e.target.value).toISOString())}
         />
         <FormInput
-          inputLabel="End Year"
-          labelFor="end_Year"
+          inputLabel="End year"
+          labelFor="end_year"
           inputType="date"
-          inputId="end_Year"
-          inputName="end_Year"
-          ariaLabelName="end Year"
+          inputId="end_year"
+          inputName="end_year"
+          ariaLabelName="End year"
           value={endYear ? new Date(endYear).toISOString().split("T")[0] : ""}
           onChange={(e) => setEndYear(new Date(e.target.value).toISOString())}
         />

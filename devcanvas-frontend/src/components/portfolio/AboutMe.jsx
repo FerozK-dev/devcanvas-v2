@@ -34,19 +34,20 @@ function AboutMe({ data, isPublic }) {
           setPortfolioPublished(result?.publishPortfolio)
         })
         .catch((rejectedValueOrSerializedError) => {
-          toast('Sessions has expired. Please login again.');
+          toast('Session has expired. Please log in again.');
         });
     }
   }, [dispatch, isPublic, data, portfolioPublished]);
 
   const updatePortfolioStatus = () => {
     dispatch(
-      togglePublish())
+      togglePublish()
+    )
       .unwrap()
       .then((originalPromiseResult) => {
-        toast(`${portfolioPublished ? "Un-Published" : "Published"  } Portfolio`)
-        setPortfolioPublished(!profileData?.publish_portfolio)
-        if (!profileData?.publish_portfolio) { window.open(`/portfolio/${profileData.id}`,'_blank', 'rel=noopener noreferrer')}
+        toast(`${portfolioPublished ? "Un-Published" : "Published" } Portfolio`)
+        if (!portfolioPublished) { window.open(`/portfolio/${profileData.id}`,'_blank', 'rel=noopener noreferrer')}
+        setPortfolioPublished(!portfolioPublished)
       })
       .catch((rejectedValueOrSerializedError) => {
         alert(rejectedValueOrSerializedError.message);
@@ -60,26 +61,26 @@ function AboutMe({ data, isPublic }) {
         <div className="flex justify-between items-center">
           <button
             onClick={() => setResumeModalOpen(true)}
-            className="px-7 py-5 mt-5 md:px-9 md:py-4 font-medium md:font-semibold bg-gray-700 text-gray-50
-            text-sm rounded-md hover:bg-gray-500 hover:text-gray-700 transition ease-linear duration-500"
+            className="px-7 py-3 mt-5 md:px-9 md:py-4 font-medium md:font-semibold bg-gray-700 text-gray-50
+            text-sm rounded-md hover:bg-gray-500 hover:text-gray-50 transition ease-linear duration-200"
           >
-            Get My CV
+            Get my CV
           </button>
 
           {!isPublic && <button
             onClick={() => setAiModalOpen(true)}
-            className="px-7 py-5 mt-5 md:px-9 md:py-4 font-medium md:font-semibold bg-gray-700 text-gray-50
-            text-sm rounded-md hover:bg-gray-500 hover:text-gray-700 transition ease-linear duration-500"
+            className="px-7 py-3 mt-5 md:px-9 md:py-4 font-medium md:font-semibold bg-gray-700 text-gray-50
+            text-sm rounded-md hover:bg-gray-500 hover:text-gray-50 transition ease-linear duration-200"
           >
             Generate CV
           </button>}
         </div>
 
-        <div className="text-center">
+        <div className="text-center w-full">
           <div className="flex justify-center my-16">
             <img
-              src={profileData?.profilePicture}
-              alt="Project display"
+              src={profileData?.profilePicture || blankProfile}
+              alt="Profile picture"
               onError={(e) => {
                 e.currentTarget.src = blankProfile // Fallback image
               }}
@@ -88,12 +89,12 @@ function AboutMe({ data, isPublic }) {
             />
           </div>
 
-          <h6 className="font-medium text-gray-600 text-lg md:text-5xl uppercase mb-8">{profileData?.firstName} {profileData?.lastName}</h6>
+          <h6 className="w-full break-word font-medium text-gray-600 text-lg md:text-5xl uppercase mb-8">{profileData?.firstName} {profileData?.lastName}</h6>
 
-          <p className="font-normal text-gray-900 text-3xl md:text-4xl leading-none mb-8">{profileData?.title}</p>
+          <p className="w-full break-word font-normal text-gray-900 text-3xl md:text-4xl leading-none mb-8">{profileData?.title}</p>
 
-          <p className="font-bold text-gray-600 text-md md:text-xl mb-16">{profileData?.headline}</p>
-          <p className="font-normal text-gray-600 text-md md:text-xl mb-16">{profileData?.aboutMe}</p>
+          <p className="w-full break-word font-bold text-gray-600 text-md md:text-xl mb-16">{profileData?.headline}</p>
+          <p className="w-full break-word font-normal text-gray-600 text-md md:text-xl mb-16">{profileData?.aboutMe}</p>
 
           {!isPublic && (
             <div className="justify-items-center">
@@ -110,7 +111,7 @@ function AboutMe({ data, isPublic }) {
                     type="button"
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
-                    onClick={() => updatePortfolioStatus(true)}
+                    onClick={() => updatePortfolioStatus()}
                     className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white"
                   >
                     {portfolioPublished ? "Un-Publish" : "Publish"  } Portfolio

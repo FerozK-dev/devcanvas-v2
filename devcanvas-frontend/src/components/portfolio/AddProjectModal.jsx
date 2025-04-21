@@ -12,6 +12,14 @@ function AddProjects({ isOpen, onClose, setProjects }) {
   const [picture, setPicture] = useState("");
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (isOpen) {
+      setTitle("");
+      setDescription("");
+      setPicture("");
+    }
+  }, [isOpen]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 

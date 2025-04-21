@@ -35,7 +35,7 @@ function Education({ data, isPublic }){
     )
       .unwrap()
       .then((originalPromiseResult) => {
-        toast("Education Removed")
+        toast("Education removed")
         setEducations(educations.filter((m) => m !== education));
       })
       .catch((rejectedValueOrSerializedError) => {
@@ -48,6 +48,11 @@ function Education({ data, isPublic }){
     setEditModalOpen(true);
   };
 
+  const openNewModal = () => {
+    setSelectedEducation(null);
+    setModalOpen(true);
+  };
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.getFullYear(); // Extracts only the year
@@ -56,10 +61,10 @@ function Education({ data, isPublic }){
   const renderEducation = educations?.map((education) => {
     const { id, description, startYear, endYear, school, degree, field, grade, activities} = education;
     return (
-      <div className="bg-gray-50 px-8 py-10 rounded-md" key={id}>
-        <h4 className="font-medium text-gray-700 text-lg mb-4">{school}</h4>
-        <p className="font-small text-gray-700 text-lg mb-4">{formatDate(startYear)} - {formatDate(endYear)} {degree} {field}</p>
-        <p className="font-normal text-gray-500 text-md mb-4">{description}</p>
+      <div className="w-full bg-gray-50 px-8 py-10 rounded-md" key={id}>
+        <h4 className="break-word font-medium text-gray-700 text-lg mb-4">{school}</h4>
+        <p className="break-word font-small text-gray-700 text-lg mb-4">{formatDate(startYear)} - {formatDate(endYear)} {degree} {field}</p>
+        <p className="break-word font-normal text-gray-500 text-md mb-4">{description}</p>
 
         <div className="relative">
           <h6 className="font-semibold text-gray-500 text-md z-10">Grade: {grade}</h6>
@@ -94,7 +99,7 @@ function Education({ data, isPublic }){
 
         <h1 className="font-medium text-gray-700 text-3xl md:text-4xl mb-5">Education</h1>
 
-        <p className="font-normal text-gray-500 text-xs md:text-base mb-20">Below is a summary of the places I studied</p>
+        <p className="font-normal text-gray-500 text-xs md:text-base mb-10">Below is a summary of the places I studied</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {renderEducation}
@@ -102,10 +107,10 @@ function Education({ data, isPublic }){
         {!isPublic && (
           <div className="mt-10 grid justify-items-end">
             <button
-              onClick={() => setModalOpen(true)}
+              onClick={() => openNewModal()}
               className="text-white bg-gray-700 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
             >
-              Add
+              Add Education
             </button>
             <AddEducationModal
               isOpen={isModalOpen}

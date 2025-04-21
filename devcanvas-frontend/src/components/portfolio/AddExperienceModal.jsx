@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addExperience } from "../../store/experience-slice";
 import Modal from "../reusable/EditModal";
@@ -13,17 +13,19 @@ function AddExpereience({ isOpen, onClose, setExperiences }) {
   const [location, setLocation] = useState("");
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (isOpen) {
+      setTitle("");
+      setDescription("");
+      setCompany("");
+      setStartDate("");
+      setEndDate("");
+      setLocation("");
+    }
+  }, [isOpen]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const newExperience = {
-      title: title,
-      description: description,
-      company: company,
-      endDate: endDate,
-      startDate: startDate,
-      location: location
-    }
 
     dispatch(addExperience({
       title: title,

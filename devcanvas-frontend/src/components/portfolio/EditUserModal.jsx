@@ -66,7 +66,7 @@ function EditUserModal({ isOpen, onClose, profile, setProfileData }) {
     dispatch(editUser(formData))
       .unwrap()
       .then((originalPromiseResult) => {
-        toast("Profile Updated")
+        toast("Profile updated")
         onClose()
         setProfileData(originalPromiseResult);
       })
@@ -77,7 +77,7 @@ function EditUserModal({ isOpen, onClose, profile, setProfileData }) {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <h2 className="text-lg font-medium text-gray-800 mb-4">Edit Details</h2>
+      <h2 className="text-lg font-medium text-gray-800 mb-4">Edit Profile Details</h2>
       <form
         onSubmit={(e) => {
           console.log("Form submission event triggered"); // Debugging
@@ -86,7 +86,7 @@ function EditUserModal({ isOpen, onClose, profile, setProfileData }) {
       >
         <div className="grid grid-cols-2 gap-4">
           <FormInput
-            inputLabel="First Name"
+            inputLabel="First name"
             labelFor="firstName"
             inputType="text"
             inputId="firstName"
@@ -97,7 +97,7 @@ function EditUserModal({ isOpen, onClose, profile, setProfileData }) {
             onChange={(e) => setFName(e.target.value)}
           />
           <FormInput
-            inputLabel="Last Name"
+            inputLabel="Last name"
             labelFor="lastName"
             inputType="text"
             inputId="lastName"
@@ -131,7 +131,7 @@ function EditUserModal({ isOpen, onClose, profile, setProfileData }) {
           />
 
           <FormInput
-            inputLabel="About Me"
+            inputLabel="About me"
             labelFor="about_me"
             inputType="text"
             inputId="about_me"
@@ -205,10 +205,10 @@ function EditUserModal({ isOpen, onClose, profile, setProfileData }) {
           /> */}
 
           <FormInput
-            inputLabel="Profile Picture"
+            inputLabel="Profile picture"
             labelFor="profile_pic"
             inputType="file"
-            inputId="work_email"
+            inputId="profile_picture"
             inputName="profile_picture"
             ariaLabelName="picture"
             onChange={(e) => setProfilePic(e.target.files[0])}

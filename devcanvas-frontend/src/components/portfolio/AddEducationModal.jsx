@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addEducation, AddEducation } from "../../store/education-slice";
 import Modal from "../reusable/EditModal";
@@ -14,6 +14,19 @@ function AddEducationModal({ isOpen, onClose, setEducations }) {
   const [grade, setGrade] = useState("");
   const [activities, setActivities] = useState("");
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isOpen) {
+      setSchool("");
+      setDescription("");
+      setDegree("");
+      setStartYear("");
+      setEndYear("");
+      setField("");
+      setGrade("");
+      setActivities("");
+    }
+  }, [isOpen]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -22,13 +22,6 @@ function EditProject({ isOpen, onClose, project, setProjects, projects }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const newProject = {
-      title: title,
-      description: description,
-      id: project.id,
-      dipslayImage: picture
-    }
-
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
@@ -40,7 +33,7 @@ function EditProject({ isOpen, onClose, project, setProjects, projects }) {
     dispatch(updateProject({ id: project.id, formData }))
       .unwrap()
       .then((originalPromiseResult) => {
-        toast("Project Updated")
+        toast("Project updated")
         onClose()
         setProjects(() =>
           projects?.map((exp) =>
