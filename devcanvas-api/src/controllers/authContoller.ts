@@ -26,7 +26,7 @@ export const signup = async (req: Request, res: Response): Promise<Response> => 
       data: { firstName, lastName, email, password: hashedPassword },
     });
 
-    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "23h" });
+    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "23h", algorithm: "HS256" });
 
     return res.status(201).json({ message: "User registered successfully", token });
   } catch (error) {
@@ -48,7 +48,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
       return res.status(400).json({ error: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "23h" });
+    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "23h", algorithm: "HS256" });
 
     return res.json({ message: "Login successful", token });
   } catch (error) {
