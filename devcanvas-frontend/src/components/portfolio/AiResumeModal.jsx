@@ -65,15 +65,17 @@ function AiResumeModal({ isOpen, onClose, profile }) {
           >
             {({ url, loading }) =>
               loading ? (
-                <p>Preparing resume...</p>
+                <p>Preparing your CV...</p>
               ) : (
-                <button
-                  onClick={() => window.open(url, '_blank')}
+                <a
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                    className="text-white bg-gray-700 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium
                             rounded-full text-sm px-5 py-2.5 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
                 >
-                  Open Resume in New Tab
-                </button>
+                  Open CV in New Tab
+                </a>
               )
             }
             {/* {({ url, loading }) =>
