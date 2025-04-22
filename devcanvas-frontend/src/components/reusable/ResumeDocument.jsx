@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   bold: { fontWeight: 'bold' },
 });
 
-const ResumeDocument = ({ name, email, userData, data }) => (
+const ResumeDocument = ({ userData, data }) => (
   <Document>
     <Page size="A4" style={styles.page}>
       {/* Personal Info */}

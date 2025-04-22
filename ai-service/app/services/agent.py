@@ -1,7 +1,8 @@
 from agno.models.google import Gemini
 from agno.agent import Agent
 from textwrap import dedent
-
+import json
+from datetime import datetime
 
 from app.schemas import ResumeGenerateResult
 from app.models import UserPublic
@@ -20,12 +21,12 @@ resume_agent: Agent = Agent(
         "   - The input MAY include the job description of the position the user is applying. If it is not provided, it will be show as None or empty",
         "2. Resume creation",
         "   - ONLY uses information provided by the user. Do not add extra skills or achievements that the user does not have",
-        "   - In the Experience section, the user may write their responsibilities in a non optimal way, rewrite them so that they follow best practices and optimize for ATS system"
+        "   - In the Experience section, the user may write their responsibilities in a non optimal way, rewrite them so that they follow best practices and optimize for ATS system. Do not mention exact time just the months and years"
         "   - IF a job description is PROVIDED, highlight the user skills that matches the position's requirement. DO NOT make up the user's skill to match",
         "   - Create a summary section to summarize the user background, skillset and aspire in about 3 sentences"
         "3. Memory usage:",
         "   - DO NOT use previous context and information from older conversation",
-        "   - ONLY use information provided by the latest prompt4. User Interaction:",
+        "   - ONLY use information provided by the latest prompt. User Interaction:",
         "   - DO NOT ask anything from the user. Just return the generated result",
         "5. Response format:",
         "   - Return the created resume in a JSON format. Return a raw json, DO NOT use MARKDOWN syntax",
@@ -43,7 +44,9 @@ resume_agent: Agent = Agent(
                         {
                         "degree": "",
                         "school": "",
-                        "year": ""
+                        "year": "",
+                        "field": "",
+                        "grade": ""
                         }
                     ],
                     "experience": [
@@ -51,6 +54,8 @@ resume_agent: Agent = Agent(
                         "title": "",
                         "company": "",
                         "duration": "",
+                        "location": "",
+                        "description": "",
                         "responsibilities": ["", ""]
                         }
                     ],
@@ -77,19 +82,39 @@ resume_agent: Agent = Agent(
     response_model=ResumeGenerateResult,
 )
 
+def format_date(date_val: datetime | str | None):
+    if isinstance(date_val, datetime):
+        return date_val.strftime("%b %Y")
+    elif isinstance(date_val, str):
+        return date_val
+    return ""
+
+def clean_user_for_ai(user: UserPublic):
+    user_dict = user.model_dump()
+
+    for exp in user_dict.get("experiences", []):
+        exp["startDate"] = format_date(exp.get("startDate"))
+        exp["endDate"] = format_date(exp.get("endDate"))
+
+    for edu in user_dict.get("educations", []):
+        edu["startYear"] = format_date(edu.get("startYear"))
+        edu["endYear"] = format_date(edu.get("endYear"))
+
+    return user_dict
 
 def generate_resume(
     user: UserPublic, job_description: str | None = None
 ) -> ResumeGenerateResult:
+    clean_user = clean_user_for_ai(user)
     """ """
     data_send_to_ai = f"""
-        Education: 
-         - {user.model_dump_json(include={"educations"})}
-        Project: 
-         - {user.model_dump_json(include={"projects"})}
-        Experience: 
-         - {user.model_dump_json(include={"experiences"})}
-    
+        Education:
+        - {json.dumps(clean_user.get("educations", []), indent=2)}
+        Projects:
+        - {json.dumps(clean_user.get("projects", []), indent=2)}
+        Experience:
+        - {json.dumps(clean_user.get("experiences", []), indent=2)}
+
     """
     question = (
         f"Create a resume for the user with the following background {data_send_to_ai}."
