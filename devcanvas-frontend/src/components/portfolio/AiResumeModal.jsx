@@ -54,42 +54,53 @@ function AiResumeModal({ isOpen, onClose, profile }) {
           </>
         )}
 
-      {resumeData && (
-        <BlobProvider
-          document={
-            <ResumeDocument
-              name={`${profile?.firstName} ${profile?.lastName}`}
-              email={profile?.email}
-              userData={profile}
-              data={resumeData}
-            />
-          }
-        >
-          {({ url, loading }) =>
-            loading ? (
-              <p>Generating preview...</p>
-            ) : (
-              <>
-                <iframe
-                  src={url}
-                  width="100%"
-                  height="600px"
-                  className="mt-4 border rounded"
-                  title="Resume Preview"
-                />
-                <a
-                  href={url}
-                  download="resume.pdf"
-                  className="text-white bg-gray-700 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium
+        {resumeData && (
+          <BlobProvider
+            document={
+              <ResumeDocument
+                userData={profile}
+                data={resumeData}
+              />
+            }
+          >
+            {({ url, loading }) =>
+              loading ? (
+                <p>Preparing resume...</p>
+              ) : (
+                <button
+                  onClick={() => window.open(url, '_blank')}
+                   className="text-white bg-gray-700 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium
                             rounded-full text-sm px-5 py-2.5 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
                 >
-                  Download CV
-                </a>
-              </>
-            )
-          }
-        </BlobProvider>
-      )}
+                  Open Resume in New Tab
+                </button>
+              )
+            }
+            {/* {({ url, loading }) =>
+              loading ? (
+                <p>Generating preview...</p>
+              ) : (
+                <>
+                  <iframe
+                    src={url}
+                    width="100%"
+                    height="600px"
+                    className="mt-4 border rounded"
+                    title="Resume Preview"
+                  />
+                  <a
+                    href={url}
+                    download="resume.pdf"
+                    className="text-white bg-gray-700 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium
+                              rounded-full text-sm px-5 py-2.5 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                  >
+                    Download CV
+                  </a>
+                </>
+              )
+            } */}
+          </BlobProvider>
+        )}
       </div>
     </Modal>
   );
