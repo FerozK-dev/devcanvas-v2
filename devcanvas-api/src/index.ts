@@ -62,23 +62,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api/v1/', authRoutes);
-app.use('/api/v1/', userRoutes);
-app.use('/api/v1/', educationRoutes);
-app.use('/api/v1/', experienceRoutes);
-app.use('/api/v1/', projectRoutes);
-app.use('/api/v1/', portfolioRoutes);
-app.use('/storage', express.static(path.join(__dirname, 'public/storage')));
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-
-app.get('/metrics', async (_req, res) => {
-  res.setHeader('Content-Type', register.contentType);
-  res.send(await register.metrics());
-});
-
-
-
 app.use((req, res, next) => {
   const end = httpRequestDuration.startTimer();
 
@@ -92,6 +75,20 @@ app.use((req, res, next) => {
 
   next();
 });
+
+app.get('/metrics', async (_req, res) => {
+  res.setHeader('Content-Type', register.contentType);
+  res.send(await register.metrics());
+});
+
+app.use('/api/v1/', authRoutes);
+app.use('/api/v1/', userRoutes);
+app.use('/api/v1/', educationRoutes);
+app.use('/api/v1/', experienceRoutes);
+app.use('/api/v1/', projectRoutes);
+app.use('/api/v1/', portfolioRoutes);
+app.use('/storage', express.static(path.join(__dirname, 'public/storage')));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
 const PORT = process.env.PORT || 3000;
