@@ -12,7 +12,8 @@ import path from 'path';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import swaggerOptions from './utils/swagger';
-// import type { CorsOptions } from 'cors';
+import { register } from "./metrics";
+import { httpRequestDuration } from './metrics';
 
 dotenv.config();
 
@@ -69,6 +70,29 @@ app.use('/api/v1/', projectRoutes);
 app.use('/api/v1/', portfolioRoutes);
 app.use('/storage', express.static(path.join(__dirname, 'public/storage')));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+
+app.get('/metrics', async (_req, res) => {
+  res.setHeader('Content-Type', register.contentType);
+  res.send(await register.metrics());
+});
+
+
+
+app.use((req, res, next) => {
+  const end = httpRequestDuration.startTimer();
+
+  res.on('finish', () => {
+    end({
+      method: req.method,
+      route: req.route?.path || req.path,
+      code: res.statusCode,
+    });
+  });
+
+  next();
+});
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
