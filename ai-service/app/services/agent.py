@@ -3,10 +3,9 @@ from agno.agent import Agent
 from textwrap import dedent
 import json
 from datetime import datetime
-
 from app.schemas import ResumeGenerateResult
 from app.models import UserPublic
-
+from typing import Union
 
 # model = Ollama(id="qwen2.5:7b", host=settings.OLLAMA_HOST)
 model = Gemini(id="gemini-2.0-flash")
@@ -82,30 +81,52 @@ resume_agent: Agent = Agent(
     response_model=ResumeGenerateResult,
 )
 
-def format_date(date_val: datetime | str | None):
+
+def format_date(date_val: Union[datetime, str, None]) -> str:
+    """
+    Extract just month and year from a datetime object or ISO date string.
+    Returns an empty string for None or invalid formats.
+    """
+    if date_val is None:
+        return ""
+
     if isinstance(date_val, datetime):
-        return date_val.strftime("%b %Y")
-    elif isinstance(date_val, str):
-        return date_val
+        return date_val.strftime("%b %Y")  # e.g., "Jan 2021"
+
+    if isinstance(date_val, str):
+        try:
+            parsed_date = datetime.fromisoformat(date_val)
+            return parsed_date.strftime("%b %Y")
+        except ValueError:
+            return ""
+
     return ""
 
-def clean_user_for_ai(user: UserPublic):
-    user_dict = user.model_dump()
 
+def clean_user_for_ai(user: UserPublic) -> dict:
+    """Convert all datetime fields to strings before serialization"""
+    user_dict = user.model_dump(mode="json")  # Use mode="json" to handle basic serialization
+
+    # Process experiences
     for exp in user_dict.get("experiences", []):
         exp["startDate"] = format_date(exp.get("startDate"))
         exp["endDate"] = format_date(exp.get("endDate"))
 
+    # Process educations
     for edu in user_dict.get("educations", []):
         edu["startYear"] = format_date(edu.get("startYear"))
         edu["endYear"] = format_date(edu.get("endYear"))
+        edu["field"] = str(edu.get("field", ""))
+        edu["grade"] = str(edu.get("grade", ""))
 
     return user_dict
+
 
 def generate_resume(
     user: UserPublic, job_description: str | None = None
 ) -> ResumeGenerateResult:
     clean_user = clean_user_for_ai(user)
+
     """ """
     data_send_to_ai = f"""
         Education:
