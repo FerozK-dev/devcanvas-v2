@@ -23,5 +23,5 @@ dependencies = [
     "ollama>=0.4.7",
     "sqlmodel>=0.0.24",
     "ruff>=0.11.6",
-    prometheus-client = "^0.20.0",
+    "prometheus-client>=0.20.0",
 ]

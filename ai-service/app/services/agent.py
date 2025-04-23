@@ -3,13 +3,12 @@ from agno.agent import Agent
 from textwrap import dedent
 import json
 from datetime import datetime
-from app.settings import settings
 from app.schemas import ResumeGenerateResult
 from app.models import UserPublic
 from typing import Union
 
 # model = Ollama(id="qwen2.5:7b", host=settings.OLLAMA_HOST)
-model = Gemini(id="gemini-2.0-flash", api_key=settings.GOOGLE_API_KEY)
+model = Gemini(id="gemini-2.0-flash")
 
 resume_agent: Agent = Agent(
     name="resume_asisstant_agent",
@@ -127,8 +126,7 @@ def generate_resume(
     user: UserPublic, job_description: str | None = None
 ) -> ResumeGenerateResult:
     clean_user = clean_user_for_ai(user)
-    print("user", user)
-    print(clean_user.get("educations", []))
+
     """ """
     data_send_to_ai = f"""
         Education:
