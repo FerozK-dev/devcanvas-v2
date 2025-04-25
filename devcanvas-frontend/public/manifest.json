@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "DevCanvas",
+  "name": "DevCanvas: Personalized portfolio builder",
   "icons": [
     {
       "src": "favicon.ico",
