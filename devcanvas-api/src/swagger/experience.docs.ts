@@ -129,6 +129,7 @@
  *         application/json:
  *          schema:
  *            $ref: '#/components/schemas/ExperienceCreate'
+ *     responses:
  *       201:
  *         description: Experience created successfully
  *         content:

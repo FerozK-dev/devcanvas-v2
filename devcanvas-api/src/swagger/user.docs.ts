@@ -196,7 +196,7 @@
 /**
  * @swagger
  * /user/toggle-portfolio-status:
- *   post:
+ *   patch:
  *     summary: Toggle portfolio publication status
  *     tags: [User Profile]
  *     security:
