@@ -1,10 +1,3 @@
-# Introduction
-This site is a personalized portfolio builder targeted at web developers and software industry professionals. Users can sign up on the platform and start building their own portfolio. The site provides option to publish the portfolio which makes it publicly available.
-
-# Usage
-Usage Instructions:
-Open the deployed link for the project mentioned at the top. Go to signup page from the navbar. Provide your details and sign up on the app. If not already logged in, log in using your credentials and you will be taken to the My portfolio page. Here you can edit various sections separately. Edit your profile, education, experience, and portfolio section accordingly. Once you are done with setting up your portfolio and are satisfied with how it looks, click the Publish portfolio button under the profile section to publish your portfolio. Publishing will open a new tab with the published version of your portfolio. You will notice that this version will not have any buttons to edit or add details. This version is publicly accessible and you can copy the link to share with your contacts. If you decide to unpublish, simply click the Unpublish portfolio button on My portfolio and your portfolio is automatically unpublished and the link will not show your portfolio publicly.
-
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
