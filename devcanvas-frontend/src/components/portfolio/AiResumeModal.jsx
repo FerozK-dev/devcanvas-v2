@@ -22,7 +22,7 @@ function AiResumeModal({ isOpen, onClose, profile }) {
       setResumeData(result);
     })
     .catch(() => {
-      toast('CV could not be generated. Please try again');
+      toast('CV could not be generated as AI server is busy. Please try again');
     })
     .finally(() => {
       setIsGenerating(false);
